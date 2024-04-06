@@ -100,14 +100,6 @@ public class CheckerBoard {
 		}
 		System.out.println();
 		
-		
-		
-			
-		
-			
-			
-			
-			
 		//creating a checkerboard
 		int n = 8;
         StdDraw.setXscale(0, n);
@@ -121,12 +113,40 @@ public class CheckerBoard {
             }
         }
         
-        //creating a white checker
+        //creating white checkers (x, y, radius)
         StdDraw.setPenColor(StdDraw.WHITE);
-        double x = 0.5;
-        double y = 7.5;
         double radius = 0.4;
-        StdDraw.filledCircle(x, y, radius);
+        	//row 1
+        StdDraw.filledCircle(0.5, 7.5, radius);
+        StdDraw.filledCircle(2.5, 7.5, radius);
+        StdDraw.filledCircle(4.5, 7.5, radius);
+        StdDraw.filledCircle(6.5, 7.5, radius);
+        	//row2
+        StdDraw.filledCircle(1.5, 6.5, radius);
+        StdDraw.filledCircle(3.5, 6.5, radius);
+        StdDraw.filledCircle(5.5, 6.5, radius);
+        StdDraw.filledCircle(7.5, 6.5, radius);
+        	//row 3
+        StdDraw.filledCircle(0.5, 5.5, radius);
+        StdDraw.filledCircle(2.5, 5.5, radius);
+        StdDraw.filledCircle(4.5, 5.5, radius);
+        StdDraw.filledCircle(6.5, 5.5, radius);
+        	//row 6
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.filledCircle(1.5, 2.5, radius);
+        StdDraw.filledCircle(3.5, 2.5, radius);
+        StdDraw.filledCircle(5.5, 2.5, radius);
+        StdDraw.filledCircle(7.5, 2.5, radius);
+        	//row 7
+        StdDraw.filledCircle(0.5, 1.5, radius);
+        StdDraw.filledCircle(2.5, 1.5, radius);
+        StdDraw.filledCircle(4.5, 1.5, radius);
+        StdDraw.filledCircle(6.5, 1.5, radius);
+        	//row 8
+        StdDraw.filledCircle(1.5, 0.5, radius);
+        StdDraw.filledCircle(3.5, 0.5, radius);
+        StdDraw.filledCircle(5.5, 0.5, radius);
+        StdDraw.filledCircle(7.5, 0.5, radius);
     }
 		
 		
