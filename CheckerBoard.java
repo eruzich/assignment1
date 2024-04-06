@@ -15,7 +15,7 @@ public class CheckerBoard {
 		Checker[] checker = new Checker[24];
 		int[] key = new int[24];
 		for (int i = 0; i < 24; i++) {
-			key[i] = 10 + StdRandom.uniformInt(20);
+			key[i] = StdRandom.uniformInt(1, 100);
 		}
 		
 		//creating white checkers	
@@ -33,7 +33,10 @@ public class CheckerBoard {
 		}
 		
 		//printing checkers
-		System.out.println("checkers: " + checker.toString());
+		System.out.println("checker name (key)");
+		for (int i = 0; i < checker.length; i++) {
+			System.out.println(checker[i].toString());
+		}
 		
 		//creating array of coordinates
 		Coordinates[][] coord = new Coordinates[6][4];
@@ -67,7 +70,29 @@ public class CheckerBoard {
 		//creating symbol table of keys and coordinates for checkers
 		BinarySearchST<Integer, Coordinates> st = new BinarySearchST<>();
 		st.put(key[0], coord[0][0]);
-		//st.put(key[0], coord[0][1]);
+		st.put(key[1], coord[0][1]);
+		st.put(key[2], coord[0][2]); 
+		st.put(key[3], coord[0][3]);
+		st.put(key[4], coord[1][0]);
+		st.put(key[5], coord[1][1]);
+		st.put(key[6], coord[1][2]);
+		st.put(key[7], coord[1][3]);
+		st.put(key[8], coord[2][0]);
+		st.put(key[9], coord[2][1]);
+		st.put(key[10], coord[2][2]);
+		st.put(key[11], coord[2][3]);
+		st.put(key[12], coord[3][0]);
+		st.put(key[13], coord[3][1]);
+		st.put(key[14], coord[3][2]);
+		st.put(key[15], coord[3][3]);
+		st.put(key[16], coord[4][0]);
+		st.put(key[17], coord[4][1]);
+		st.put(key[18], coord[4][2]);
+		st.put(key[19], coord[4][3]);
+		st.put(key[20], coord[5][0]);
+		st.put(key[21], coord[5][1]);
+		st.put(key[22], coord[5][2]);
+		st.put(key[23], coord[5][3]);
 		
 		System.out.print("All keys : ");
 		for (int i : st.keys()) {
@@ -75,7 +100,7 @@ public class CheckerBoard {
 		}
 		System.out.println();
 		
-		System.out.println(coord.toString());
+		
 		
 			
 		
