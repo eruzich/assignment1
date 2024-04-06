@@ -1,9 +1,8 @@
 package gp;
 
-import java.util.Arrays;
-
-import a07.SnowWaterEquivalent;
+import edu.princeton.cs.algs4.BinarySearchST;
 import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class CheckerBoard {
 
@@ -13,18 +12,38 @@ public class CheckerBoard {
         
 		
 		//creating white checkers	
-		String[] key = new String[24];
+		Checker[] checker = new Checker[24];
 		String wC = "whiteChecker";
-		for (int i = 0; i < 12; i++) {
-			key[i] = wC.concat(Character.toString(i));
+		int[] key = new int[24];
+		for (int i = 0; i < 24; i++) {
+			key[i] = 10 + StdRandom.uniformInt(20);
 		}
-		String bC = "blackChecker";
 		for (int j = 0; j < 12; j++) {
-			key[j] = bC.concat(Character.toString(j));
+			checker[j] = new Checker (key[j], wC.concat(Character.toString(j)));
 		}
 		
-				
-		ST<key, Coordinate> st = new ST<>();
+		//creating array of coordinates
+		Coordinates[][] coord = { {new Coordinates(0, 0)}, {new Coordinates(0, 2)}, {new Coordinates(0, 4)},
+		{new Coordinates(0, 6)}, {new Coordinates(1, 1)}, {new Coordinates(1, 3)}, {new Coordinates(1, 5)},
+		{new Coordinates(1, 7)}, {new Coordinates(2, 0)}, {new Coordinates(2, 2)}, {new Coordinates(2, 4)},
+		{new Coordinates(2, 6)}, {new Coordinates(5, 1)}, {new Coordinates(5, 3)}, {new Coordinates(5, 5)},
+		{new Coordinates(5, 7)}, {new Coordinates(6, 0)}, {new Coordinates(6, 2)}, {new Coordinates(6, 4)},
+		{new Coordinates(6, 6)}, {new Coordinates(7, 1)}, {new Coordinates(7, 3)}, {new Coordinates(7, 5)}, 
+		{new Coordinates(7, 7)}};
+		
+		//creating black checkers
+		String bC = "blackChecker";
+		for (int h = 12; h < 24; h++) {
+			checker[h] = new Checker (key[h], bC.concat(Character.toString(h)));
+		}
+
+		//creating symbol table of keys and coordinates for checkers
+		BinarySearchST<Integer, Coordinates> st = new BinarySearchST<>();
+		st.put(key[0], coord[0][0]);
+		st.put(key[0], coord[0][1]);
+		
+			
+		
 			
 			
 			
