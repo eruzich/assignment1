@@ -4,8 +4,28 @@ import edu.princeton.cs.algs4.BinarySearchST;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
+/*
+ * Creates an array of coordinates for the checkerboard, white checker objects,
+ * red checker objects, and draws the checkerboard with the checkers on the board.
+ * 
+ * @author Elizabeth Ruzich and Erin Mortensen
+ */
 public class CheckerBoard {
 
+	private Coordinates[][] coord;
+	private Checker checker;
+	
+	/**
+	* Constructs a new CheckerBoard.
+	*
+	* @param x the x coordinate
+	* @param y the y coordinate
+	*/
+	public CheckerBoard(Checker checker, Coordinates[][] coord) {
+	    this.checker = checker;
+	    this.coord = coord;
+	}
+	
 		public static void main(String[] args) {
         
 		//creating array of coordinates for checkers
@@ -146,7 +166,4 @@ public class CheckerBoard {
         StdDraw.filledCircle(5.5, 0.5, radius);
         StdDraw.filledCircle(7.5, 0.5, radius);
     }
-		
-	
-
 }
