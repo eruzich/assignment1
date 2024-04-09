@@ -7,6 +7,7 @@ public class Checker {
 	//private Graph possibleMoves;
 	int key;
 	String name;
+	Coordinates coord;
 	
 	/**
 	* Constructs a new Checker	
@@ -17,7 +18,14 @@ public class Checker {
 	}
 	
 	public void kingMe() {
-		
+		if ((name == "rC") & (coord.getY() == 0)) {
+			isKing = true;
+		}
+		else if ((name == "wC") & (coord.getY() == 7)) {
+			isKing = true;
+		}
+		else
+			isKing = false;
 	}
 	
 	public void getPossibleMoves() {
