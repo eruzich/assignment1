@@ -75,5 +75,6 @@ public class Coordinates implements Comparable<Coordinates> {
 		}
 		return 0;
 
-
+	//when I copied the code over it was missing a closing bracket
+	}
 }
