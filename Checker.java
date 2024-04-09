@@ -1,9 +1,17 @@
 package gp;
 
+import java.awt.Color;
+
+/*
+ * Defines checkers as having coordinates, being a color, having
+ * possible moves, and being kinged/not kinged.
+ * 
+ * @author Erin Mortensen and Elizabeth Ruzich
+ */
 public class Checker {
 
 	private boolean isKing;
-	//private Std.Color color;
+	private Color color;
 	//private Graph possibleMoves;
 	int key;
 	String name;
@@ -26,6 +34,10 @@ public class Checker {
 		}
 		else
 			isKing = false;
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 	
 	public void getPossibleMoves() {
