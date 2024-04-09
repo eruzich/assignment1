@@ -7,7 +7,7 @@ package gp;
  * @author Erin Mortensen and Elizabeth Ruzich
  */
 
-public class Coordinates {
+public class Coordinates implements Comparable<Coordinates> {
 	private int x;
 	private int y;
 
@@ -26,8 +26,18 @@ public class Coordinates {
 		return x;
 	}
 
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
 	public int getY() {
 	    return y;
+	}
+
+	public void setY(int y)
+	{
+		this.y= y;
 	}
 	
 	/**
@@ -40,6 +50,30 @@ public class Coordinates {
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
+
+	@Override
+	public int compareTo(Coordinates other) {
+		if(this.x < other.x)
+		{
+			return -1;
+		}
+		if(this.x > other.x)
+		{
+			return 1;
+		}
+		if(this.x == other.x)
+		{
+			if(this.y < other.y)
+			{
+				return -1;
+			}
+			if(this.y > other.y)
+			{
+				return 1;
+			}
+			
+		}
+		return 0;
 
 
 }
