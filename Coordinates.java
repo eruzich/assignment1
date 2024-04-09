@@ -2,7 +2,7 @@ package gp;
 
 
 /*
- * Represents the x and y coordinates of a checkerpiece in 2D space.
+ * Represents the x and y coordinates of a checker in 2D space.
  * 
  * @author Erin Mortensen and Elizabeth Ruzich
  */
@@ -37,7 +37,7 @@ public class Coordinates implements Comparable<Coordinates> {
 
 	public void setY(int y)
 	{
-		this.y= y;
+		this.y = y;
 	}
 	
 	/**
@@ -74,7 +74,5 @@ public class Coordinates implements Comparable<Coordinates> {
 			
 		}
 		return 0;
-
-	//when I copied the code over it was missing a closing bracket
 	}
 }

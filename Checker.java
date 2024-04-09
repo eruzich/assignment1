@@ -2,52 +2,60 @@ package gp;
 
 import java.awt.Color;
 
+import edu.princeton.cs.algs4.Digraph;
+
 /*
- * Defines checkers as having coordinates, being a color, having
- * possible moves, and being kinged/not kinged.
+ * Used to create a Checker object
  * 
  * @author Erin Mortensen and Elizabeth Ruzich
  */
 public class Checker {
-
-	private boolean isKing;
+	
 	private Color color;
-	//private Graph possibleMoves;
-	int key;
-	String name;
-	Coordinates coord;
+	private boolean isKing;
+	private Digraph possibleMoves;
+	private boolean isSelected;
 	
 	/**
-	* Constructs a new Checker	
-	*/
-	public Checker(int key, String name) {
-		this.key = key;
-		this.name = name;
+	 * Constructs a new Checker that is either white or red.
+	 * 
+	 * @param color
+	 */
+	public Checker(Color color)
+	{
+		possibleMoves = new Digraph(64);
+		this.color = color;
+		isKing = false;
+		isSelected = false;
 	}
 	
-	public void kingMe() {
-		if ((name == "rC") & (coord.getY() == 0)) {
-			isKing = true;
-		}
-		else if ((name == "wC") & (coord.getY() == 7)) {
-			isKing = true;
-		}
-		else
-			isKing = false;
+	public void selectChecker()
+	{
+		isSelected = true;	
 	}
 	
-	public Color getColor() {
+	public boolean getIsKing()
+	{
+		return isKing;
+	}
+	
+	public void kingMe()
+	{
+		isKing = true;
+	}
+	
+	public Digraph getPossibleMoves()
+	{
+		return possibleMoves;
+	}
+	
+	public void setPossibleMoves(int start, int end)
+	{
+		possibleMoves.addEdge(start, end);
+	}
+
+	public Color getColor()
+	{
 		return color;
 	}
-	
-	public void getPossibleMoves() {
-		
-	}
-	
-	@Override
-    public String toString() {
-        return name + "(" + key + ")";
-    }
-	
-	
 }
