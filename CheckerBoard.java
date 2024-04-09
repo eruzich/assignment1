@@ -13,8 +13,8 @@ import edu.princeton.cs.algs4.StdDraw;
  * 
  * @author Erin Mortensen and Elizabeth Ruzich
  */
-public class CheckerBoard {
-
+public class CheckerBoard 
+	{
 	private Coordinates[][] board;
 	private BinarySearchST<Coordinates, Checker> whiteCheckers;
 	private BinarySearchST<Coordinates, Checker> redCheckers;
@@ -24,13 +24,16 @@ public class CheckerBoard {
 	/**
 	 * Creates white checkers, red checkers, and a checker board
 	 */
-	public CheckerBoard() {
+	public CheckerBoard() 
+	{
 		whiteCheckers = new BinarySearchST<>();
 		redCheckers = new BinarySearchST<>();
 		board = new Coordinates[rows][columns];
 		
-		for (int y = rows - 1; y >= 0; y--) {
-			for (int x = columns - 1; x >= 0; x--) {
+		for (int y = rows - 1; y >= 0; y--) 
+		{
+			for (int x = columns - 1; x >= 0; x--) 
+			{
 				board[x][y] = (new Coordinates(x, y));
 			}
 		}
@@ -44,46 +47,53 @@ public class CheckerBoard {
 	 * @param x for x-coordinate
 	 * @param y for y-coordinate
 	 */
-	public Coordinates getCoordinate(int x, int y) {
+	public Coordinates getCoordinate(int x, int y) 
+	{
 		return board[x][y];
 	}
 
 	/**
 	 * Place the initial white checkers on the checker board
 	 */
-	private void placeWhiteCheckers() {
+	private void placeWhiteCheckers() 
+	{
 		int checkersToPlace = 12;
 
-		for (int y = 7; y >= 0; y--) {
-			for (int x = 0; x < 8; x++) {
-				if (checkersToPlace <= 0) {
+		for (int y = 7; y >= 0; y--) 
+		{
+			for (int x = 0; x < 8; x++) 
+			{
+				if (checkersToPlace <= 0) 
+				{
 					break;
 				}
-				if ((y % 2 == 1 && x % 2 == 0) || (y % 2 == 0 && x % 2 == 1)) {
-
+				if ((y % 2 == 1 && x % 2 == 0) || (y % 2 == 0 && x % 2 == 1)) 
+				{
 					Coordinates coor = board[x][y];
 					whiteCheckers.put(coor, new Checker(Color.WHITE));
 					checkersToPlace--;
 				}
 			}
 		}
-		
 	}
 
 	/**
 	 * Place the initial red checkers on the checker board
 	 */
-	private void placeRedCheckers() {
-
+	private void placeRedCheckers() 
+	{
 		int checkersToPlace = 12;
 
-		for (int r = 0; r < 8; r++) {
-			for (int c = 0; c < 8; c++) {
-				if (checkersToPlace <= 0) {
+		for (int r = 0; r < 8; r++) 
+		{
+			for (int c = 0; c < 8; c++) 
+			{
+				if (checkersToPlace <= 0) 
+				{
 					break;
 				}
-				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1)) {
-
+				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1)) 
+				{
 					Coordinates coor = board[c][r];
 					redCheckers.put(coor, new Checker(Color.RED));
 					checkersToPlace--;
@@ -106,23 +116,28 @@ public class CheckerBoard {
 	/**
 	 * Print the checker board and checkers in the console
 	 */
-	public void printBoard() {
+	public void printBoard() 
+	{
 		System.out.println("\n\nBoard");
-		for (int y = 7; y >= 0; y--) {
-			for (int x = 0; x < 8; x++) {
+		for (int y = 7; y >= 0; y--) 
+		{
+			for (int x = 0; x < 8; x++) 
+			{
 				if (x % 8 == 0) {
 					System.out.println();
 				}
 				Coordinates c = board[x][y];
 
-				if (whiteCheckers.get(c) != null) {
-						System.out.print("  w   ");
-					}
-				else if(redCheckers.get(c) != null){
-						System.out.print("  r   ");
-					}
-			
-				else {
+				if (whiteCheckers.get(c) != null) 
+				{
+					System.out.print("  w   ");
+				}
+				else if(redCheckers.get(c) != null)
+				{
+					System.out.print("  r   ");
+				}
+				else 
+				{
 					System.out.print(board[x][y].toString() + " ");
 				}
 			}
@@ -134,7 +149,8 @@ public class CheckerBoard {
 	 * @param x for x-coordinate
 	 * @param y for x-coordinate
 	 */
-	public void deleteChecker(int x, int y) {
+	public void deleteChecker(int x, int y) 
+	{
 		Coordinates c = board[x][y];
 		
 		BinarySearchST<Coordinates, Checker> checkers;
@@ -295,7 +311,6 @@ public class CheckerBoard {
 					checkJumpMove(myCheckers, otherCheckers, behindChecker, checkerToMove);
 				}
 			}
-			
 		}
 		//if we are not on the right edge of the board see what right moves we can make
 		if(currentXPosition != 7 && currentXPosition != 6)
@@ -314,9 +329,6 @@ public class CheckerBoard {
 			}
 		}
 	}
-	
-
-	
 
 	/**
 	 * Add a two vertices to a checker's possible move directed graph
@@ -324,11 +336,11 @@ public class CheckerBoard {
 	 * @param startingPosition The position the checker is starting at
 	 * @param endingPosition The position the checker ends at
 	 */
-	private void addPossibleMove(Checker checker, Coordinates startingPosition, Coordinates endingPosition) {
+	private void addPossibleMove(Checker checker, Coordinates startingPosition, Coordinates endingPosition) 
+	{
 		int start = coordinateToInteger(startingPosition);
 		int end = coordinateToInteger(endingPosition);
 		checker.setPossibleMoves(start, end);
-
 	}
 
 	/**
@@ -336,8 +348,8 @@ public class CheckerBoard {
 	 * at those coordinates
 	 * @param c Coordinate the checker is at
 	 */
-	public void printPossibleMoves(Coordinates c) {
-		
+	public void printPossibleMoves(Coordinates c) 
+	{	
 		Checker checker;
 		if(whiteCheckers.get(c) != null)
 		{
@@ -359,7 +371,8 @@ public class CheckerBoard {
 		System.out.println("Adjacency List:");
 		System.out.println("---------------");
 
-		for (int v = 0; v < dg.V(); v++) {
+		for (int v = 0; v < dg.V(); v++) 
+		{
 			if(dg.adj(v) == null)
 			{
 				return;
@@ -374,19 +387,19 @@ public class CheckerBoard {
 				adjsNumber--;
 				System.out.print(a);
 
-				if (adjsNumber != 0) {
+				if (adjsNumber != 0) 
+				{
 					System.out.print(" -> ");
 				}
 			}
-
 			System.out.println();
-
 		}
 	}
 
 	/**
 	 * Helps work with directed graph so that the position 
 	 * of the graph matches the coordinates of the board
+	 * 
 	 * @param c coordinates to match
 	 * @return Returns an integer that represents a numerical value
 	 * for a space on the checker board.
@@ -395,7 +408,8 @@ public class CheckerBoard {
 	 *      8, 9, 10, 11, 12, 13, 14 
 	 * e.g. 0, 1,  2, 3, 4, 5, 6, 7, 
 	 */
-	public int coordinateToInteger(Coordinates c) {
+	public int coordinateToInteger(Coordinates c) 
+	{
 		int x = c.getX();
 		int y = c.getY();
 		return (y * 8) + x;
@@ -408,16 +422,18 @@ public class CheckerBoard {
         StdDraw.setXscale(0, n);
         StdDraw.setYscale(0, n);
 
-        for (int i = n-1; i >=0; i--) {
-            for (int j = n-1; j >=0; j--) {
+        for (int i = n-1; i >=0; i--) 
+        {
+            for (int j = n-1; j >=0; j--) 
+            {
                 if ((i + j) % 2 != 0) 
-                	{
+                {
                 	StdDraw.setPenColor(StdDraw.BLACK);
-                	}
-                else                  
-                	{
+                }
+                else 
+                {                
                 	StdDraw.setPenColor(StdDraw.RED);
-                	}
+               	}
                 StdDraw.filledSquare(i + 0.5, j + 0.5, 0.5);
             }
         }
@@ -446,13 +462,11 @@ public class CheckerBoard {
         	
         	StdDraw.filledCircle(x + offSet, y + offSet, radius);
         }
-        
-        
-        
 	}
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 
 		CheckerBoard cb = new CheckerBoard();
 
@@ -469,9 +483,5 @@ public class CheckerBoard {
 		
 		cb.printPossibleMoves(c);
 		cb.drawCheckerBoard();
-		
-		
-
 	}
-
 }
