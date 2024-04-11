@@ -2,11 +2,11 @@ package gp;
 
 import edu.princeton.cs.algs4.StdDraw;
 
-public class GameOfCheckers {
+public class GameOfCheckers 
+{
 
 	private Player winner;
-	private static boolean isPlaying = true;	//I made this positive, because the double negative of not over was confusing me
-	private CheckerBoard checkerBoard;
+	private static boolean isPlaying = true;
 	private Player redPlayer;
 	private Player whitePlayer;
 	
@@ -15,12 +15,15 @@ public class GameOfCheckers {
 	/**
 	* Constructs a new Game of Checkers.
 	*
-	* 	*/
-	public GameOfCheckers() {
+	*/
+	public GameOfCheckers() 
+	{
+	
 	}
 	
-	public void playGame() {
-		
+	public void playGame() 
+	{
+		//isPlaying = true;
 	}
 
 	public static void main(String[] args) 
@@ -41,13 +44,14 @@ public class GameOfCheckers {
 		//cb.printPossibleMoves(c);
 		cb.drawCheckerBoard();
 		
-		while (isPlaying == true) {
-			if (StdDraw.isMousePressed() && !mousePressed) {
+		while (isPlaying == true) 
+		{
+			//to do - needs to be conditioned on being a valid location for one of the checkers
+			if (StdDraw.isMousePressed() && !mousePressed) 
+			{
 				mousePressed = true;
 				int x = (int)StdDraw.mouseX();
 				int y = (int)StdDraw.mouseY();
-				//System.out.println("x: " + x);
-				//System.out.println("y: " + y);
 				Coordinates coord = new Coordinates(x, y);
 				
 				StdDraw.setPenColor(StdDraw.YELLOW);
@@ -56,6 +60,22 @@ public class GameOfCheckers {
 				StdDraw.filledCircle(x + offSet, y + offSet, radius);
 				cb.getAllPossibleMoves(coord);
 				cb.printPossibleMoves(coord);	
+			}
+		}
+		if (cb.getRedCheckers().size() == 0) 
+		{
+			isPlaying = false;
+			StdDraw.setPenColor(StdDraw.YELLOW);
+			StdDraw.filledSquare(0.5, 0.4, 0.3);
+			StdDraw.setPenColor(StdDraw.BLACK);
+			StdDraw.square(0.5, 0.4, 0.3);
+			StdDraw.text(0.5, .4, "Play Again?  Press to start again.");
+			while (isPlaying == false) 
+			{
+				if (StdDraw.isMousePressed() && !mousePressed) 
+				{
+					CheckerBoard cb1 = new CheckerBoard();
+				}
 			}
 		}
 	}
