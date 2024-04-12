@@ -522,9 +522,7 @@ public class CheckerBoard
 		{
 			return false;
 		}
-
 		return true;
-
 	}
 
 	/**
@@ -597,7 +595,6 @@ public class CheckerBoard
 		}
 		drawWhiteCheckers();
 		drawRedCheckers();
-
 	}
 
 	/**
