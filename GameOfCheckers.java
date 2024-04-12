@@ -3,19 +3,19 @@ package gp;
 import edu.princeton.cs.algs4.StdDraw;
 
 /**
- * Plays a game of checkers between two players
+ * Creates a game of checkers and includes the main method for running the program.  Determines 
+ * when a size of the symbol table for white checkers or red checkers is empty in order to declare
+ * the game over and display a box asking if the user wants to play again.
+ * 
  * @author Erin Mortensen and Elizabeth Ruzich
- *
  */
 public class GameOfCheckers 
 {
 
 	private Player winner;
 	private static boolean isPlaying = true;
-	private CheckerBoard board;
 	private Player redPlayer;
 	private Player whitePlayer;
-	
 	
 	private static boolean mousePressed = false;
 	
@@ -25,76 +25,73 @@ public class GameOfCheckers
 	*/
 	public GameOfCheckers() 
 	{
-		winner = null;
-		board = new CheckerBoard();
-		redPlayer = new Player(board.getRedCheckers());
-		whitePlayer = new Player(board.getWhiteCheckers());
-		
 	
 	}
 	
 	/**
-	 * Returns board for the game
-	 * @return Returns game board
+	 * Initiates the game
 	 */
-	public CheckerBoard getBoard()
-	{
-		return board;
-	}
-	
 	public void playGame() 
 	{
-		//isPlaying = true;
+		isPlaying = true;
 	}
 
 	public static void main(String[] args) 
 	{
-		GameOfCheckers game = new GameOfCheckers();
-		CheckerBoard cb = game.getBoard();
-				
+		CheckerBoard cb = new CheckerBoard();
+
 		cb.printBoard();
 
+		System.out.println();
+
+		//Coordinates c = cb.getCoordinate(4, 5);
+		
+		System.out.println();
+//		cb.deleteChecker(0, 1);
+		
+		//cb.getAllPossibleMoves(c);
+		
+		//cb.printPossibleMoves(c);
+		cb.drawCheckerBoard();
+		
+		cb.getAllPossibleMoves(new Coordinates(2,5));
+		cb.printPossibleMoves(new Coordinates(2,5));
+		
+		cb.move(new Coordinates(2,5), new Coordinates(2,1));
+		StdDraw.pause(1000);
 		cb.drawCheckerBoard();
 	
 		
+		//colors a checker in response to receiving user input
 		while (isPlaying == true) 
 		{
-			
-			//to do - needs to be conditioned on being a valid location for one of the checkers
+			//conditioned on being a valid location for one of the checkers
 			if (StdDraw.isMousePressed() && !mousePressed) 
 			{
-				
 				mousePressed = true;
 				int x = (int)StdDraw.mouseX();
 				int y = (int)StdDraw.mouseY();
 				Coordinates coord = new Coordinates(x, y);
 				
-				StdDraw.setPenColor(StdDraw.YELLOW);
-				double radius = 0.4;
-		        double offSet = 0.5;
-				StdDraw.filledCircle(x + offSet, y + offSet, radius);
-				cb.findAllPossibleMoves(coord);
-				cb.printPossibleMoves(coord);	
-				isPlaying = false;
+				//if coordinate corresponds to a location of a checker, color the checker
+				if (coord != cb.getRedCheckers().keys() || coord != cb.getWhiteCheckers().keys())
+				{
+					StdDraw.setPenColor(StdDraw.YELLOW);
+					double radius = 0.4;
+			        double offSet = 0.5;
+					StdDraw.filledCircle(x + offSet, y + offSet, radius);
+					cb.getAllPossibleMoves(coord);
+					cb.printPossibleMoves(coord);	
+				}
+				//else error message
+				else 
+				{
+					System.out.println("There's no checker there.  Select again.");
+				}
 			}
-			
-		
-
 		}
-		
-		//show how moves work
-		cb.test1Board();
-		
-		StdDraw.pause(3000);
-		cb.drawCheckerBoard();
-		StdDraw.pause(3000);
-		cb.findAllPossibleMoves(new Coordinates(2,5));
-		cb.move(new Coordinates(2,5), new Coordinates(2,1));		
-
-		
-		
-		//let player play again if all red checkers gone
-		if (cb.getRedCheckers().size() == 0) 
+		//determines end of game
+		if (cb.getRedCheckers().size() == 0 || cb.getWhiteCheckers().size() == 0) 
 		{
 			isPlaying = false;
 			StdDraw.setPenColor(StdDraw.YELLOW);
