@@ -7,8 +7,10 @@ public class GameOfCheckers
 
 	private Player winner;
 	private static boolean isPlaying = true;
+	private CheckerBoard board;
 	private Player redPlayer;
 	private Player whitePlayer;
+	
 	
 	private static boolean mousePressed = false;
 	
@@ -18,7 +20,21 @@ public class GameOfCheckers
 	*/
 	public GameOfCheckers() 
 	{
+		winner = null;
+		board = new CheckerBoard();
+		redPlayer = new Player(board.getRedCheckers());
+		whitePlayer = new Player(board.getWhiteCheckers());
+		
 	
+	}
+	
+	/**
+	 * Returns board for the game
+	 * @return Returns game board
+	 */
+	public CheckerBoard getBoard()
+	{
+		return board;
 	}
 	
 	public void playGame() 
@@ -28,35 +44,21 @@ public class GameOfCheckers
 
 	public static void main(String[] args) 
 	{
-		CheckerBoard cb = new CheckerBoard();
-
+		GameOfCheckers game = new GameOfCheckers();
+		CheckerBoard cb = game.getBoard();
+				
 		cb.printBoard();
 
-		System.out.println();
-
-		//Coordinates c = cb.getCoordinate(4, 5);
-		
-		System.out.println();
-//		cb.deleteChecker(0, 1);
-		
-		//cb.getAllPossibleMoves(c);
-		
-		//cb.printPossibleMoves(c);
-		cb.drawCheckerBoard();
-		
-		cb.getAllPossibleMoves(new Coordinates(2,5));
-		cb.printPossibleMoves(new Coordinates(2,5));
-		
-		cb.move(new Coordinates(2,5), new Coordinates(2,1));
-		StdDraw.pause(1000);
 		cb.drawCheckerBoard();
 	
 		
 		while (isPlaying == true) 
 		{
+			
 			//to do - needs to be conditioned on being a valid location for one of the checkers
 			if (StdDraw.isMousePressed() && !mousePressed) 
 			{
+				
 				mousePressed = true;
 				int x = (int)StdDraw.mouseX();
 				int y = (int)StdDraw.mouseY();
@@ -66,10 +68,27 @@ public class GameOfCheckers
 				double radius = 0.4;
 		        double offSet = 0.5;
 				StdDraw.filledCircle(x + offSet, y + offSet, radius);
-				cb.getAllPossibleMoves(coord);
+				cb.findAllPossibleMoves(coord);
 				cb.printPossibleMoves(coord);	
+				isPlaying = false;
 			}
+			
+		
+
 		}
+		
+		//show how moves work
+		cb.test1Board();
+		
+		StdDraw.pause(3000);
+		cb.drawCheckerBoard();
+		StdDraw.pause(3000);
+		cb.findAllPossibleMoves(new Coordinates(2,5));
+		cb.move(new Coordinates(2,5), new Coordinates(2,1));		
+
+		
+		
+		//let player play again if all red checkers gone
 		if (cb.getRedCheckers().size() == 0) 
 		{
 			isPlaying = false;
