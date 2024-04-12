@@ -1,16 +1,24 @@
 package gp;
 
+import edu.princeton.cs.algs4.BinarySearchST;
 
-import edu.princeton.cs.algs4.Graph;
+/**
+ * Player class for Checkers game
+ * @author Erin Mortensen and Elizabeth Ruzich
+ *
+ */
+public class Player
+{
 
-public class Player {
+	private BinarySearchST<Coordinates, Checker> checkerPieces;
 
-	private Checker[] checkerPieces;
-	private Coordinates coord;
-	
-	public Player(Checker[] checkerPieces) {
+	/**
+	 * Sets the checkers this player uses
+	 * @param checkerPieces
+	 */
+	public Player(BinarySearchST<Coordinates, Checker> checkerPieces)
+	{
 		this.checkerPieces = checkerPieces;
 	}
-	
-	
+
 }
