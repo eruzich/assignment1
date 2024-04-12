@@ -44,6 +44,14 @@ public class GameOfCheckers
 		//cb.printPossibleMoves(c);
 		cb.drawCheckerBoard();
 		
+		cb.getAllPossibleMoves(new Coordinates(2,5));
+		cb.printPossibleMoves(new Coordinates(2,5));
+		
+		cb.move(new Coordinates(2,5), new Coordinates(2,1));
+		StdDraw.pause(1000);
+		cb.drawCheckerBoard();
+	
+		
 		while (isPlaying == true) 
 		{
 			//to do - needs to be conditioned on being a valid location for one of the checkers
