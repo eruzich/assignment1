@@ -1,6 +1,7 @@
 package gp;
 
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
  * Creates a game of checkers and includes the main method for running the program.  Determines 
@@ -54,12 +55,12 @@ public class GameOfCheckers
 		//cb.printPossibleMoves(c);
 		cb.drawCheckerBoard();
 		
-		cb.getAllPossibleMoves(new Coordinates(2,5));
-		cb.printPossibleMoves(new Coordinates(2,5));
+		//cb.getAllPossibleMoves(new Coordinates(2,5));
+		//cb.printPossibleMoves(new Coordinates(2,5));
 		
-		cb.move(new Coordinates(2,5), new Coordinates(2,1));
-		StdDraw.pause(1000);
-		cb.drawCheckerBoard();
+		//cb.move(new Coordinates(2,5), new Coordinates(2,1));
+		//StdDraw.pause(1000);
+		//cb.drawCheckerBoard();
 	
 		
 		//colors a checker in response to receiving user input
@@ -73,20 +74,27 @@ public class GameOfCheckers
 				int y = (int)StdDraw.mouseY();
 				Coordinates coord = new Coordinates(x, y);
 				
-				//if coordinate corresponds to a location of a checker, color the checker
-				if (coord != cb.getRedCheckers().keys() || coord != cb.getWhiteCheckers().keys())
+				//if coordinate corresponds to a location of a checker, color checker and show next moves
+				if (cb.redCheckers.contains(coord) || cb.whiteCheckers.contains(coord))
 				{
+					//color selected checker yellow
 					StdDraw.setPenColor(StdDraw.YELLOW);
 					double radius = 0.4;
-			        double offSet = 0.5;
+				    double offSet = 0.5;
 					StdDraw.filledCircle(x + offSet, y + offSet, radius);
+					
+					//color possible moves with yellow outline
 					cb.getAllPossibleMoves(coord);
-					cb.printPossibleMoves(coord);	
+					cb.printPossibleMoves(coord);
+					Coordinates coord2 = cb.integerToCoordinate(37);  //need to figure out how to access adjacency list
+					StdDraw.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+					Coordinates coord3 = cb.integerToCoordinate(39);
+					StdDraw.circle(coord3.getX() + offSet, coord3.getY() + offSet, radius);
 				}
-				//else error message
+				//else print an error message
 				else 
-				{
-					System.out.println("There's no checker there.  Select again.");
+				{		
+					StdOut.print("There's no checker there.  Select again.");
 				}
 			}
 		}

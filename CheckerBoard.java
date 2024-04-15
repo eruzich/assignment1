@@ -16,8 +16,8 @@ import edu.princeton.cs.algs4.StdDraw;
 public class CheckerBoard
 {
 	private Coordinates[][] board;
-	private BinarySearchST<Coordinates, Checker> whiteCheckers;
-	private BinarySearchST<Coordinates, Checker> redCheckers;
+	public BinarySearchST<Coordinates, Checker> whiteCheckers;  //had to change to public to access in dif class
+	public BinarySearchST<Coordinates, Checker> redCheckers; //had to change to public to access in dif class
 	private int rows = 8;
 	private int columns = 8;
 
@@ -106,22 +106,22 @@ public class CheckerBoard
 	{
 		int checkersToPlace = 12;
 
-//		for (int r = 0; r < 8; r++) 
-//		{
-//			for (int c = 0; c < 8; c++) 
-//			{
-//				if (checkersToPlace <= 0) 
-//				{
-//					break;
-//				}
-//				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1)) 
-//				{
-//					Coordinates coor = board[c][r];
-//					redCheckers.put(coor, new Checker(Color.RED));
-//					checkersToPlace--;
-//				}
-//			}
-//		}
+		for (int r = 0; r < 8; r++) 
+		{
+			for (int c = 0; c < 8; c++) 
+			{
+				if (checkersToPlace <= 0) 
+				{
+					break;
+				}
+				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1)) 
+				{
+					Coordinates coor = board[c][r];
+					redCheckers.put(coor, new Checker(Color.RED));
+					checkersToPlace--;
+				}
+			}
+		}
 
 		Coordinates coor = board[3][4];
 		redCheckers.put(coor, new Checker(Color.RED));
@@ -342,7 +342,6 @@ public class CheckerBoard
 		// can jump over piece to left only if won't fall of left side of board
 		if (currentXPosition != 0 && currentXPosition != 1)
 		{
-
 			Coordinates toOurLeft = board[currentXPosition - 1][currentYPosition + direction];
 
 			// spot on board can only have one checker at a time, so only need to check the
