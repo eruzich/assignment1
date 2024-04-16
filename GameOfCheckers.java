@@ -85,7 +85,10 @@ public class GameOfCheckers
 					
 					//color possible moves with yellow outline
 					cb.getAllPossibleMoves(coord);
-					cb.printPossibleMoves(coord);
+					cb.getPossibleMoves(coord);
+					//int possibleMove = cb.getPossibleMoves(coord);
+					
+					
 					Coordinates coord2 = cb.integerToCoordinate(37);  //need to figure out how to access adjacency list
 					StdDraw.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
 					Coordinates coord3 = cb.integerToCoordinate(39);

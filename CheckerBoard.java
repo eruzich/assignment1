@@ -1,6 +1,5 @@
 package gp;
 
-import java.awt.Color;
 import edu.princeton.cs.algs4.BinarySearchST;
 import edu.princeton.cs.algs4.DepthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
@@ -92,7 +91,7 @@ public class CheckerBoard
 				if ((y % 2 == 1 && x % 2 == 0) || (y % 2 == 0 && x % 2 == 1))
 				{
 					Coordinates coor = board[x][y];
-					whiteCheckers.put(coor, new Checker(Color.WHITE));
+					whiteCheckers.put(coor, new Checker(StdDraw.WHITE));
 					checkersToPlace--;
 				}
 			}
@@ -117,16 +116,16 @@ public class CheckerBoard
 				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1)) 
 				{
 					Coordinates coor = board[c][r];
-					redCheckers.put(coor, new Checker(Color.RED));
+					redCheckers.put(coor, new Checker(StdDraw.WHITE));
 					checkersToPlace--;
 				}
 			}
 		}
 
 		Coordinates coor = board[3][4];
-		redCheckers.put(coor, new Checker(Color.RED));
+		redCheckers.put(coor, new Checker(StdDraw.RED));
 		coor = board[3][2];
-		redCheckers.put(coor, new Checker(Color.RED));
+		redCheckers.put(coor, new Checker(StdDraw.RED));
 
 //		Coordinate coor = board[7][1];
 //		redCheckers.put(coor,new Checker(Color.RED));
@@ -256,7 +255,7 @@ public class CheckerBoard
 		int direction;
 
 		// red will move up the board, white will move down
-		if (checkerToMove.getColor() == Color.RED)
+		if (checkerToMove.getColor() == StdDraw.RED)
 		{
 			direction = 1;
 		}
@@ -268,8 +267,8 @@ public class CheckerBoard
 		int currentXPosition = c.getX();
 
 		// may not need this code if king will use a different kind of code
-		if ((currentYPosition == 0 && checkerToMove.getColor() == Color.WHITE)
-				|| (currentYPosition == 7 && checkerToMove.getColor() == Color.RED))
+		if ((currentYPosition == 0 && checkerToMove.getColor() == StdDraw.WHITE)
+				|| (currentYPosition == 7 && checkerToMove.getColor() == StdDraw.RED))
 		{
 			return;
 		}
@@ -320,7 +319,7 @@ public class CheckerBoard
 	{
 		int direction;
 
-		if (checkerToMove.getColor() == Color.RED)
+		if (checkerToMove.getColor() == StdDraw.RED)
 		{
 			direction = 1;
 		}
@@ -333,8 +332,8 @@ public class CheckerBoard
 
 		// they are a king now and their turn is over and they will have different
 		// functions to jump
-		if ((currentYPosition <= 1 && checkerToMove.getColor() == Color.WHITE)
-				|| (currentYPosition >= 6 && checkerToMove.getColor() == Color.RED))
+		if ((currentYPosition <= 1 && checkerToMove.getColor() == StdDraw.WHITE)
+				|| (currentYPosition >= 6 && checkerToMove.getColor() == StdDraw.RED))
 		{
 			return;
 		}
@@ -397,7 +396,7 @@ public class CheckerBoard
 	 * 
 	 * @param c Coordinate the checker is at
 	 */
-	public void printPossibleMoves(Coordinates c)
+	public int[] getPossibleMoves(Coordinates c)  //changed from print to get
 	{
 		Checker checker;
 		if (whiteCheckers.get(c) != null)
@@ -410,8 +409,8 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("no checker at that coordiante");
-			return;
+			System.out.println("no checker at that coordinate");
+			return null;
 		}
 
 		Digraph dg = checker.getPossibleMoves();
@@ -424,7 +423,7 @@ public class CheckerBoard
 		{
 			if (dg.adj(v) == null)
 			{
-				return;
+				return null;
 			}
 			Iterable<Integer> vertexAdjs = dg.adj(v);
 			System.out.print(v + ": ");
@@ -434,16 +433,22 @@ public class CheckerBoard
 			// print each adjacent vertex to the one we are looking at
 			for (Integer a : vertexAdjs)
 			{
+				int intArray[] = new int[20];
 				adjsNumber--;
 				System.out.print(a);
+				intArray[0] = a;
 
+				int i = 0;
 				if (adjsNumber != 0)
 				{
 					System.out.print(" -> ");
+					intArray[i] = a;
+					i++;
 				}
 			}
 			System.out.println();
 		}
+		return null;
 	}
 
 	/**
