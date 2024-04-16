@@ -1,5 +1,8 @@
 package gp;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -85,14 +88,14 @@ public class GameOfCheckers
 					
 					//color possible moves with yellow outline
 					cb.getAllPossibleMoves(coord);
+					cb.printPossibleMoves(coord);
 					cb.getPossibleMoves(coord);
-					//int possibleMove = cb.getPossibleMoves(coord);
-					
-					
-					Coordinates coord2 = cb.integerToCoordinate(37);  //need to figure out how to access adjacency list
-					StdDraw.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
-					Coordinates coord3 = cb.integerToCoordinate(39);
-					StdDraw.circle(coord3.getX() + offSet, coord3.getY() + offSet, radius);
+					ArrayList<Integer> possibleMoves = cb.getPossibleMoves(coord);
+					System.out.println(possibleMoves);
+					for (int i = 0; i < 10; i++) {
+						//Coordinates coord2 = cb.integerToCoordinate(possibleMoves[i]);
+						//StdDraw.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+					}
 				}
 				//else print an error message
 				else 

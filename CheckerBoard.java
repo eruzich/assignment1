@@ -1,9 +1,13 @@
 package gp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.princeton.cs.algs4.BinarySearchST;
 import edu.princeton.cs.algs4.DepthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
  * Defines checkers as having coordinates, being a color, having possible moves,
@@ -392,38 +396,37 @@ public class CheckerBoard
 	}
 
 	/**
-	 * Print an adjacency table in the console for the checker at those coordinates
-	 * 
+	 * Print an adjacency table in the console for the checker
+	 * at those coordinates
 	 * @param c Coordinate the checker is at
 	 */
-	public int[] getPossibleMoves(Coordinates c)  //changed from print to get
-	{
+	public void printPossibleMoves(Coordinates c) 
+	{	
 		Checker checker;
-		if (whiteCheckers.get(c) != null)
+		if(whiteCheckers.get(c) != null)
 		{
 			checker = whiteCheckers.get(c);
 		}
-		else if (redCheckers.get(c) != null)
+		else if(redCheckers.get(c) != null)
 		{
 			checker = redCheckers.get(c);
 		}
 		else
 		{
-			System.out.println("no checker at that coordinate");
-			return null;
+			System.out.println("no checker at that coordiante");
+			return;
 		}
-
+		
 		Digraph dg = checker.getPossibleMoves();
 
 		// print adj table
 		System.out.println("Adjacency List:");
 		System.out.println("---------------");
 
-		for (int v = 0; v < dg.V(); v++)
-		{
-			if (dg.adj(v) == null)
+		for (int v = 0; v < dg.V(); v++) {
+			if(dg.adj(v) == null)
 			{
-				return null;
+				return;
 			}
 			Iterable<Integer> vertexAdjs = dg.adj(v);
 			System.out.print(v + ": ");
@@ -431,24 +434,62 @@ public class CheckerBoard
 			int adjsNumber = dg.outdegree(v); // help print adjacency list so no -> after last adj vertex
 
 			// print each adjacent vertex to the one we are looking at
-			for (Integer a : vertexAdjs)
+			for (Integer a : vertexAdjs) 
 			{
-				int intArray[] = new int[20];
 				adjsNumber--;
 				System.out.print(a);
-				intArray[0] = a;
 
-				int i = 0;
-				if (adjsNumber != 0)
+				if (adjsNumber != 0) 
 				{
 					System.out.print(" -> ");
-					intArray[i] = a;
-					i++;
 				}
 			}
+
 			System.out.println();
 		}
-		return null;
+	}
+	
+	/**
+	 * Getter for possible moves
+	 * @param c
+	 * @return
+	 */
+	public ArrayList<Integer> getPossibleMoves(Coordinates c)
+	{
+		Checker checker;
+		if(whiteCheckers.get(c) != null)
+		{
+			checker = whiteCheckers.get(c);
+		}
+		else if(redCheckers.get(c) != null)
+		{
+			checker = redCheckers.get(c);
+		}
+		else
+		{
+			System.out.println("no checker at that coordiante");
+			return null;
+		}
+		
+		Digraph dg = checker.getPossibleMoves();
+		ArrayList<Integer> adjacencyList = new ArrayList<Integer>();
+		for (int v = 0; v < dg.V(); v++) 
+		{
+			if(dg.adj(v) == null)
+			{
+				return null;
+			}
+			else 
+			{
+				for (int w : dg.adj(v)) {
+						adjacencyList.add(w);
+					
+				}
+				System.out.println("what does this look like?" + adjacencyList);
+				return adjacencyList;
+			}
+		}
+		return adjacencyList;
 	}
 
 	/**
