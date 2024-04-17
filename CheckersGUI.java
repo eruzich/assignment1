@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import edu.princeton.cs.algs4.BinarySearchST;
-import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Draw;
 import edu.princeton.cs.algs4.DrawListener;
 import edu.princeton.cs.algs4.StdOut;
@@ -42,7 +41,10 @@ public class CheckersGUI implements DrawListener
 		int y = 4;
 
 		drawnBoard.setPenColor(Draw.CYAN);
-		drawnBoard.filledRectangle(x, y, .5, .5);
+		drawnBoard.filledRectangle(x, y, .7, .5);
+		drawnBoard.setPenColor(Draw.BLACK);
+		drawnBoard.text(x, y, "submit move");
+		
 	}
 
 	/**
@@ -64,15 +66,11 @@ public class CheckersGUI implements DrawListener
 				{
 					drawnBoard.setPenColor(Draw.RED);
 				}
-
 				drawnBoard.filledSquare(i + 0.5, j + 0.5, 0.5);
-
 			}
 		}
-
 		drawWhiteCheckers();
 		drawRedCheckers();
-
 	}
 
 	/**
@@ -103,7 +101,6 @@ public class CheckersGUI implements DrawListener
 	 */
 	public void drawWhiteCheckers()
 	{
-
 		if (whiteCheckers.isEmpty())
 		{
 			return;
@@ -119,9 +116,11 @@ public class CheckersGUI implements DrawListener
 
 			drawnBoard.filledCircle(x + offSet, y + offSet, radius);
 		}
-
 	}
 
+	/**
+	 * Identifies location of mouse click and prints out x and y values7
+	 */
 	public void mouseClicked(double x, double y)
 	{
 		System.out.println(x + ", " + y);
@@ -135,39 +134,50 @@ public class CheckersGUI implements DrawListener
 		{
 			System.out.println("Clicking submit button");
 			game.submitMove();
-
 		}
 
+		// color selected checker yellow
+		Coordinates coord = new Coordinates((int) x, (int) y);
+		drawnBoard.setPenColor(Draw.YELLOW);
+		double radius = 0.4;
+		double offSet = 0.5;
+		drawnBoard.filledCircle(coord.getX() + offSet, coord.getY() + offSet, radius);
+
+		// color possible moves with yellow outline
+		ArrayList<Integer> possibleMoves = board.getPossibleMoves(coord);
+		for (int i = 0; i < possibleMoves.size(); i++)
+		{
+			Coordinates coord2 = board.integerToCoordinate(possibleMoves.get(i));
+			drawnBoard.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+		}
 	}
 
-	public void drawPossibleMoves(Coordinates coord)
+	public void drawPossibleMoves()
 	{
 		Checker checkerWithMoves;
-
-		if (board.getRedCheckers().contains(coord) || board.getWhiteCheckers().contains(coord))
-		{
-			// color selected checker yellow
-			drawnBoard.setPenColor(Draw.YELLOW);
-			double radius = 0.4;
-			double offSet = 0.5;
-			drawnBoard.filledCircle(coord.getX() + offSet, coord.getY() + offSet, radius);
-
-			// color possible moves with yellow outline
-			board.getAllPossibleMoves(coord);
-			board.printPossibleMoves(coord);
-			board.getPossibleMoves(coord);
-			ArrayList<Integer> possibleMoves = board.getPossibleMoves(coord);
-			for (int i = 0; i < possibleMoves.size(); i++)
-			{
-				Coordinates coord2 = board.integerToCoordinate(possibleMoves.get(i));
-				drawnBoard.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
-			}
-		}
-		// else print an error message
-		else
-		{
-			StdOut.print("There's no checker there.  Select again.");
-		}
-
 	}
+	
+	public void drawKingedCheckers()
+	{
+		Checker kingedChecker;
+		double radius = 0.4;
+		double offSet = 0.5;
+		Coordinates kingCoord = ;  //to do - determine how to obtain the coordinates for kinged checker
+		int x = kingCoord.getX();
+		int y = kingCoord.getY();
+		
+		drawnBoard.filledCircle(x + offSet, y + offSet, radius);
+		drawnBoard.text(x, y, "K");
+	}
+	
+	public void drawTurn()
+	{
+		//to do - based on determining whose turn it is
+		drawnBoard.setPenColor(Draw.CYAN);
+		drawnBoard.filledRectangle(9, 1, .7, .5);
+		drawnBoard.setPenColor(Draw.BLACK);
+		drawnBoard.text(9, 1, "white's move");
+	}
+	
+	
 }

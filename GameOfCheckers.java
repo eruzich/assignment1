@@ -34,7 +34,6 @@ public class GameOfCheckers
 
 	/**
 	 * Constructs a new Game of Checkers.
-	 *
 	 */
 	public GameOfCheckers()
 	{
@@ -46,7 +45,6 @@ public class GameOfCheckers
 		movesToTake = new Queue<>();
 		whoseTurn = redPlayer;
 		gui = new CheckersGUI(board, this);
-
 	}
 
 	/**
@@ -84,7 +82,6 @@ public class GameOfCheckers
 //					redPlayer = new Player(board.getRedCheckers());
 //					whitePlayer = new Player(board.getWhiteCheckers());
 //					isPlaying = true;
-//
 //				}
 //			}
 //		}
@@ -209,7 +206,6 @@ public class GameOfCheckers
 			{
 				return;
 			}
-
 			movesToTake.enqueue(coor);
 			board.getAllPossibleMoves(coor);
 			return;
@@ -223,14 +219,11 @@ public class GameOfCheckers
 		{
 			System.out.println(c.toString());
 		}
-
 	}
 
 	public static void main(String[] args)
 	{
 		GameOfCheckers game = new GameOfCheckers();
 		game.playGame();
-
 	}
-
 }
