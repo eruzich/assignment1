@@ -413,7 +413,7 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("no checker at that coordiante");
+			System.out.println("no checker at that coordinate");
 			return;
 		}
 		
@@ -467,7 +467,7 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("no checker at that coordiante");
+			System.out.println("no checker at that coordinate");
 			return null;
 		}
 		
@@ -475,18 +475,12 @@ public class CheckerBoard
 		ArrayList<Integer> adjacencyList = new ArrayList<Integer>();
 		for (int v = 0; v < dg.V(); v++) 
 		{
-			if(dg.adj(v) == null)
+			Iterable<Integer> vertexAdjs = dg.adj(v);
+			int adjsNumber = dg.outdegree(v);
+			for (Integer a : vertexAdjs) 
 			{
-				return null;
-			}
-			else 
-			{
-				for (int w : dg.adj(v)) {
-						adjacencyList.add(w);
-					
-				}
-				System.out.println("what does this look like?" + adjacencyList);
-				return adjacencyList;
+				adjsNumber--;
+				adjacencyList.add(a);
 			}
 		}
 		return adjacencyList;

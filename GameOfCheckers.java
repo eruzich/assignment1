@@ -91,10 +91,9 @@ public class GameOfCheckers
 					cb.printPossibleMoves(coord);
 					cb.getPossibleMoves(coord);
 					ArrayList<Integer> possibleMoves = cb.getPossibleMoves(coord);
-					System.out.println(possibleMoves);
-					for (int i = 0; i < 10; i++) {
-						//Coordinates coord2 = cb.integerToCoordinate(possibleMoves[i]);
-						//StdDraw.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+					for (int i = 0; i < possibleMoves.size(); i++) {
+						Coordinates coord2 = cb.integerToCoordinate(possibleMoves.get(i));
+						StdDraw.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
 					}
 				}
 				//else print an error message
