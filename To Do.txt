@@ -1,11 +1,11 @@
 Need to do
 
-- Draw Kinged Checkers
-- Draw Message saying Whose Turn it is
-- Show possible moves
+- Draw Kinged Checkers (I created a drawKingedCheckers(Coordinates c) method in the CheckersGUI -EDR)
+- Draw Message saying Whose Turn it is (done, put in announceTurn() method -EDR)
+- Show possible moves (done -EDR)
 - Make sure that if a player clicks on another person's piece that is in their path they end up at the blank space behind the piece and they don't just land on that opposing player's piece
 - Let players unselect a checker
-- Game over logic/ Play again button
+- Game over logic/ Play again button (drawing working, logic is nearly there, located in mouseClicked method -EDR)
 - Check that king move is working properly
 
 
