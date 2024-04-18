@@ -1,14 +1,8 @@
 package gp;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
-import edu.princeton.cs.algs4.BinarySearchST;
-import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Draw;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Queue;
 
 /**
  * Creates a game of checkers and includes the main method for running the
@@ -57,34 +51,14 @@ public class GameOfCheckers
 		return board;
 	}
 
-	public void checkIfGameOver()
+	public boolean checkIfGameOver()
 	{
-		// determines end of game
-//		if (redPlayer.getPlayersCheckers().size() == 0 || whitePlayer.getPlayersCheckers().size() == 0)
-//		{
-//			isPlaying = false;
-//
-//			// print winner announcement
-//
-//			// ask if they want to play again
-//			Draw playAgain = new Draw();
-//			playAgain.setPenColor(Draw.YELLOW);
-//			playAgain.filledSquare(0.5, 0.4, 0.3);
-//			playAgain.setPenColor(Draw.BLACK);
-//			playAgain.square(0.5, 0.4, 0.3);
-//			playAgain.text(0.5, .4, "Play Again?  Press to start again.");
-//			while (isPlaying == false)
-//			{
-//				if (playAgain.isMousePressed())
-//				{
-//					winner = null;
-//					board = new CheckerBoard();
-//					redPlayer = new Player(board.getRedCheckers());
-//					whitePlayer = new Player(board.getWhiteCheckers());
-//					isPlaying = true;
-//				}
-//			}
-//		}
+		if (board.getRedCheckers().size() == 0 || board.getRedCheckers().size() == 0)
+		{
+			isPlaying = false;
+			return true;
+		}
+		return true;
 	}
 
 	private void announceTurn(Player player)
@@ -93,15 +67,20 @@ public class GameOfCheckers
 
 		if (player.equals(redPlayer))
 		{
-			message = "Red's Turn";
+			StdDraw.setPenColor(Draw.CYAN);
+			StdDraw.filledRectangle(9, 1, .7, .5);
+			StdDraw.filledRectangle(9, 1, .7, .5);
+			StdDraw.setPenColor(Draw.BLACK);
+			StdDraw.text(9, 1, "Red's Turn");
 		}
 		else
 		{
-			message = "White's Turn";
+			StdDraw.setPenColor(Draw.CYAN);
+			StdDraw.filledRectangle(9, 1, .7, .5);
+			StdDraw.filledRectangle(9, 1, .7, .5);
+			StdDraw.setPenColor(Draw.BLACK);
+			StdDraw.text(9, 1, "White's Turn");
 		}
-
-		// need to draw text box and put message in it
-
 	}
 
 	public void playGame()
@@ -122,8 +101,8 @@ public class GameOfCheckers
 	}
 
 	/**
-	 * Allows the player to click on multiple spaces to make a move When they do the
-	 * submitMove method the spaces are submitted and their piece moves This method
+	 * Allows the player to click on multiple spaces to make a move. When they do the
+	 * submitMove method the spaces are submitted and their piece moves. This method
 	 * does not validate whether the moves in the movesToTake queue are valid
 	 */
 	public void submitMove()

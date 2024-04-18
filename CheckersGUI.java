@@ -123,32 +123,56 @@ public class CheckersGUI implements DrawListener
 	 */
 	public void mouseClicked(double x, double y)
 	{
+		Coordinates coord = new Coordinates((int) x, (int) y);
 		System.out.println(x + ", " + y);
 
+		//if mouse click is within the checker board area
 		if (x < 8 && y < 8)
 		{
 			game.pickPlacesToMove(new Coordinates((int) x, (int) y));
+			// color selected checker yellow
+			drawnBoard.setPenColor(Draw.YELLOW);
+			double radius = 0.4;
+			double offSet = 0.5;
+			drawnBoard.filledCircle(coord.getX() + offSet, coord.getY() + offSet, radius);
+
+			// color possible moves with yellow outline
+			CheckerBoard board = game.getBoard();
+			board.getAllPossibleMoves(coord);
+			ArrayList<Integer> possibleMoves = board.getPossibleMoves(coord);
+			for (int i = 0; i < possibleMoves.size(); i++)
+			{
+				Coordinates coord2 = board.integerToCoordinate(possibleMoves.get(i));
+				drawnBoard.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+			}
 		}
 
+		//if mouse click is within the submit button area
 		if (x >= 8.5 && x <= 9.5 && y >= 3.5 && y <= 4.5)
 		{
 			System.out.println("Clicking submit button");
 			game.submitMove();
 		}
 
-		// color selected checker yellow
-		Coordinates coord = new Coordinates((int) x, (int) y);
-		drawnBoard.setPenColor(Draw.YELLOW);
-		double radius = 0.4;
-		double offSet = 0.5;
-		drawnBoard.filledCircle(coord.getX() + offSet, coord.getY() + offSet, radius);
-
-		// color possible moves with yellow outline
-		ArrayList<Integer> possibleMoves = board.getPossibleMoves(coord);
-		for (int i = 0; i < possibleMoves.size(); i++)
+		//if game ends, ask if player wants to start new game
+		//I don't know why this is triggered when game.pickPlacesToMove is activated
+		if (game.checkIfGameOver() == true)	
 		{
-			Coordinates coord2 = board.integerToCoordinate(possibleMoves.get(i));
-			drawnBoard.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+			drawnBoard.setPenColor(Draw.YELLOW);
+			drawnBoard.filledRectangle(5.0, 8.7, 1.0, 0.5);
+			drawnBoard.setPenColor(Draw.BLACK);
+			drawnBoard.rectangle(5.0, 8.7, 1.0, 0.5);
+			drawnBoard.text(5.0, 8.7, "Play Again?");
+			drawnBoard.text(5.0, 8.5, "Press to start again.");
+			if (x >= 4.0 && x <= 6.0 && y >= 8.0 && y <= 9.0)
+			{
+				Draw playAgain = new Draw();
+				board = new CheckerBoard();
+				//winner = null;	
+				//redPlayer = new Player(board.getRedCheckers());
+				//whitePlayer = new Player(board.getWhiteCheckers());
+				//isPlaying = true;				
+			}	
 		}
 	}
 
@@ -157,27 +181,17 @@ public class CheckersGUI implements DrawListener
 		Checker checkerWithMoves;
 	}
 	
-	public void drawKingedCheckers()
+	public void drawKingedCheckers(Coordinates c)
 	{
-		Checker kingedChecker;
 		double radius = 0.4;
 		double offSet = 0.5;
-		Coordinates kingCoord = ;  //to do - determine how to obtain the coordinates for kinged checker
-		int x = kingCoord.getX();
-		int y = kingCoord.getY();
+		int x = c.getX();
+		int y = c.getY();
 		
 		drawnBoard.filledCircle(x + offSet, y + offSet, radius);
 		drawnBoard.text(x, y, "K");
 	}
 	
-	public void drawTurn()
-	{
-		//to do - based on determining whose turn it is
-		drawnBoard.setPenColor(Draw.CYAN);
-		drawnBoard.filledRectangle(9, 1, .7, .5);
-		drawnBoard.setPenColor(Draw.BLACK);
-		drawnBoard.text(9, 1, "white's move");
-	}
 	
 	
 }
