@@ -1,0 +1,16 @@
+Need to do
+
+- Draw Kinged Checkers
+- Draw Message saying Whose Turn it is
+- Show possible moves
+- Make sure that if a player clicks on another person's piece that is in their path they end up at the blank space behind the piece and they don't just land on that opposing player's piece
+- Let players unselect a checker
+- Game over logic/ Play again button
+- Check that king move is working properly
+
+
+Want to do
+
+-  See if we should change player move back to them clicking two spots instead of clicking a button
+-  See if there is a way to let a kinged checker travel in a circle if that is a possible move with only two button clicks
+-draw taken checkers
