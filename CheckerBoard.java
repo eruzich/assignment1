@@ -1,13 +1,17 @@
 package gp;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.List;
+
+import javax.swing.JFrame;
 
 import edu.princeton.cs.algs4.BinarySearchST;
+import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
 import edu.princeton.cs.algs4.DepthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Draw;
+import edu.princeton.cs.algs4.Stack;
 
 /**
  * Defines checkers as having coordinates, being a color, having possible moves,
@@ -19,8 +23,8 @@ import edu.princeton.cs.algs4.StdOut;
 public class CheckerBoard
 {
 	private Coordinates[][] board;
-	public BinarySearchST<Coordinates, Checker> whiteCheckers;  //had to change to public to access in dif class
-	public BinarySearchST<Coordinates, Checker> redCheckers; //had to change to public to access in dif class
+	private BinarySearchST<Coordinates, Checker> whiteCheckers;
+	private BinarySearchST<Coordinates, Checker> redCheckers;
 	private int rows = 8;
 	private int columns = 8;
 
@@ -38,6 +42,7 @@ public class CheckerBoard
 			for (int x = columns - 1; x >= 0; x--)
 			{
 				board[x][y] = (new Coordinates(x, y));
+
 			}
 		}
 		placeWhiteCheckers();
@@ -50,7 +55,7 @@ public class CheckerBoard
 	 * 
 	 * @return whiteCheckers
 	 */
-	public BinarySearchST getWhiteCheckers()
+	public BinarySearchST<Coordinates, Checker> getWhiteCheckers()
 	{
 		return whiteCheckers;
 	}
@@ -61,7 +66,7 @@ public class CheckerBoard
 	 * 
 	 * @return redCheckers
 	 */
-	public BinarySearchST getRedCheckers()
+	public BinarySearchST<Coordinates, Checker> getRedCheckers()
 	{
 		return redCheckers;
 	}
@@ -95,7 +100,7 @@ public class CheckerBoard
 				if ((y % 2 == 1 && x % 2 == 0) || (y % 2 == 0 && x % 2 == 1))
 				{
 					Coordinates coor = board[x][y];
-					whiteCheckers.put(coor, new Checker(StdDraw.WHITE));
+					whiteCheckers.put(coor, new Checker(Draw.WHITE));
 					checkersToPlace--;
 				}
 			}
@@ -109,74 +114,30 @@ public class CheckerBoard
 	{
 		int checkersToPlace = 12;
 
-		for (int r = 0; r < 8; r++) 
+		for (int r = 0; r < 8; r++)
 		{
-			for (int c = 0; c < 8; c++) 
+			for (int c = 0; c < 8; c++)
 			{
-				if (checkersToPlace <= 0) 
+				if (checkersToPlace <= 0)
 				{
 					break;
 				}
-				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1)) 
+				if ((r % 2 == 1 && c % 2 == 0) || (r % 2 == 0 && c % 2 == 1))
 				{
 					Coordinates coor = board[c][r];
-					redCheckers.put(coor, new Checker(StdDraw.WHITE));
+					redCheckers.put(coor, new Checker(Draw.RED));
 					checkersToPlace--;
 				}
 			}
 		}
 
-		Coordinates coor = board[3][4];
-		redCheckers.put(coor, new Checker(StdDraw.RED));
-		coor = board[3][2];
-		redCheckers.put(coor, new Checker(StdDraw.RED));
-
-//		Coordinate coor = board[7][1];
-//		redCheckers.put(coor,new Checker(Color.RED));
-//		 coor = board[2][3];
-//		 redCheckers.put(coor,new Checker(Color.RED));
-//		 coor = board[4][5];
-//		 redCheckers.put(coor,new Checker(Color.RED));
-//		 
 	}
 
 	/**
-	 * Print the checker board and checkers in the console
-	 */
-	public void printBoard()
-	{
-		System.out.println("\n\nBoard");
-		for (int y = 7; y >= 0; y--)
-		{
-			for (int x = 0; x < 8; x++)
-			{
-				if (x % 8 == 0)
-				{
-					System.out.println();
-				}
-				Coordinates c = board[x][y];
-
-				if (whiteCheckers.get(c) != null)
-				{
-					System.out.print("  w   ");
-				}
-				else if (redCheckers.get(c) != null)
-				{
-					System.out.print("  r   ");
-				}
-				else
-				{
-					System.out.print(board[x][y].toString() + " ");
-				}
-			}
-		}
-	}
-
-	/**
-	 * Deletes a checker when opponent moves onto spot taken by checker
+	 * Deletes a checker at a specific coordinate.
 	 * 
 	 * @param x for x-coordinate
-	 * @param y for x-coordinate
+	 * @param y for y-coordinate
 	 */
 	public void deleteChecker(int x, int y)
 	{
@@ -201,9 +162,11 @@ public class CheckerBoard
 	}
 
 	/**
-	 * Determines the possible moves for white checkers and red checkers
+	 * Given a Coordinate find all possible move the checker at that coordinate can
+	 * take. If there is not a checker at the coordinate specified then the function
+	 * returns
 	 * 
-	 * @param c for coordinates
+	 * @param c Coordinate of checker you want to see the moves for
 	 */
 	public void getAllPossibleMoves(Coordinates c)
 	{
@@ -227,13 +190,12 @@ public class CheckerBoard
 		}
 
 		Checker checkerToMove = myCheckers.get(c);
-		if (checkerToMove == null)
-		{
-			return;
-		}
+		checkerToMove.resetPossibleMoves(); // if checker has possibleMoves set reset them so we get fresh directed graph
+											// without old possible moves
+
 		if (checkerToMove.getIsKing())
 		{
-
+			kingedCheckerMove(myCheckers, otherCheckers, c);
 		}
 		else
 		{
@@ -242,13 +204,15 @@ public class CheckerBoard
 	}
 
 	/**
+	 * Given a coordinate and two BinarySearchST of different colored checkers (one
+	 * white and one red) determine where a checker (not kinged) can move on the
+	 * board. The possible moves will be updated in that checker's graph
 	 * 
 	 * @param myCheckers
 	 * @param otherCheckers
 	 * @param c
 	 */
-	public void regularCheckerMove(BinarySearchST<Coordinates, Checker> myCheckers,
-			BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c)
+	private void regularCheckerMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c)
 	{
 		Checker checkerToMove = myCheckers.get(c);
 		// if I don't have a checker at that coordinate, return
@@ -256,10 +220,11 @@ public class CheckerBoard
 		{
 			return;
 		}
+
 		int direction;
 
 		// red will move up the board, white will move down
-		if (checkerToMove.getColor() == StdDraw.RED)
+		if (checkerToMove.getColor() == Draw.RED)
 		{
 			direction = 1;
 		}
@@ -267,22 +232,23 @@ public class CheckerBoard
 		{
 			direction = -1;
 		}
+
 		int currentYPosition = c.getY();
 		int currentXPosition = c.getX();
 
 		// may not need this code if king will use a different kind of code
-		if ((currentYPosition == 0 && checkerToMove.getColor() == StdDraw.WHITE)
-				|| (currentYPosition == 7 && checkerToMove.getColor() == StdDraw.RED))
+		if ((currentYPosition == 0 && checkerToMove.getColor() == Draw.WHITE) || (currentYPosition == 7 && checkerToMove.getColor() == Draw.RED))
 		{
 			return;
 		}
 
-		// see if we can move to the left
+		// see if we can move to the left, can't if will fall of the edge of the board
 		if (currentXPosition != 0)
 		{
 			Coordinates moveToLeft = board[currentXPosition - 1][currentYPosition + direction];
 
-			if (myCheckers.get(moveToLeft) == null && otherCheckers.get(moveToLeft) == null)
+			if (myCheckers.get(moveToLeft) == null && otherCheckers.get(moveToLeft) == null) // spot is empty can move
+																								// there
 			{
 				addPossibleMove(checkerToMove, c, moveToLeft);
 			}
@@ -312,18 +278,22 @@ public class CheckerBoard
 	}
 
 	/**
+	 * See if a checker can jump over another. If it can add the coordinates for the
+	 * checker being jumped, and the space behind it to the checker doing the
+	 * jumping. This allows the us to keep track of what checkers are being jumped
+	 * and need to be deleted
 	 * 
-	 * @param myCheckers
-	 * @param otherCheckers
-	 * @param c
-	 * @param checkerToMove
+	 * @param myCheckers    Checkers of the player who will be doing the jumping
+	 * @param otherCheckers Opposing player's checkers that may be jumped
+	 * @param c             Coordinate of where the checker doing the jumping is
+	 *                      starting from
+	 * @param checkerToMove The checker who we want the possible moves for
 	 */
-	private void checkJumpMove(BinarySearchST<Coordinates, Checker> myCheckers,
-			BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove)
+	private void checkJumpMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove)
 	{
 		int direction;
 
-		if (checkerToMove.getColor() == StdDraw.RED)
+		if (checkerToMove.getColor() == Draw.RED)
 		{
 			direction = 1;
 		}
@@ -335,9 +305,8 @@ public class CheckerBoard
 		int currentXPosition = c.getX();
 
 		// they are a king now and their turn is over and they will have different
-		// functions to jump
-		if ((currentYPosition <= 1 && checkerToMove.getColor() == StdDraw.WHITE)
-				|| (currentYPosition >= 6 && checkerToMove.getColor() == StdDraw.RED))
+		// functions to jump from now on
+		if ((currentYPosition <= 1 && checkerToMove.getColor() == Draw.WHITE) || (currentYPosition >= 6 && checkerToMove.getColor() == Draw.RED))
 		{
 			return;
 		}
@@ -345,6 +314,7 @@ public class CheckerBoard
 		// can jump over piece to left only if won't fall of left side of board
 		if (currentXPosition != 0 && currentXPosition != 1)
 		{
+
 			Coordinates toOurLeft = board[currentXPosition - 1][currentYPosition + direction];
 
 			// spot on board can only have one checker at a time, so only need to check the
@@ -381,8 +351,265 @@ public class CheckerBoard
 		}
 	}
 
+	public void kingedCheckerMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c)
+	{
+		Checker checkerToMove = myCheckers.get(c);
+		Stack<Coordinates> haveJumped = new Stack<>();
+
+		if (!checkerToMove.getIsKing())
+		{
+			return;
+		}
+
+		int currentYPosition = c.getY();
+		int currentXPosition = c.getX();
+
+		if (currentXPosition != 0)
+		{
+
+			// spot is empty can move there
+			if (currentYPosition != 7)
+			{
+				Coordinates moveLeftUp = board[currentXPosition - 1][currentYPosition + 1];
+				if (myCheckers.get(moveLeftUp) == null && otherCheckers.get(moveLeftUp) == null)
+				{
+					addPossibleMove(checkerToMove, c, moveLeftUp);
+				}
+				if (otherCheckers.get(moveLeftUp) != null)
+				{
+					checkKingJumpMove(myCheckers, otherCheckers, c, checkerToMove, haveJumped, 0, c);
+				}
+			}
+
+			if (currentYPosition != 0)
+			{
+				Coordinates moveLeftDown = board[currentXPosition - 1][currentYPosition - 1];
+				if (myCheckers.get(moveLeftDown) == null && otherCheckers.get(moveLeftDown) == null)
+				{
+					addPossibleMove(checkerToMove, c, moveLeftDown);
+				}
+				if (otherCheckers.get(moveLeftDown) != null)
+				{
+					checkKingJumpMove(myCheckers, otherCheckers, c, checkerToMove, haveJumped, 0, c);
+				}
+			}
+
+		}
+
+		if (currentXPosition != 7)
+		{
+			if (currentYPosition != 7)
+			{
+				Coordinates moveRightUp = board[currentXPosition + 1][currentYPosition + 1];
+
+				if (myCheckers.get(moveRightUp) == null && otherCheckers.get(moveRightUp) == null)
+				{
+					addPossibleMove(checkerToMove, c, moveRightUp);
+				}
+				// if that square is taken by the opposing player's checker see if we can jump
+				// it
+				if (otherCheckers.get(moveRightUp) != null)
+				{
+					checkKingJumpMove(myCheckers, otherCheckers, c, checkerToMove, haveJumped, 0, c);
+				}
+
+			}
+
+			if (currentYPosition != 0)
+			{
+				Coordinates moveRightDown = board[currentXPosition + 1][currentYPosition - 1];
+
+				if (myCheckers.get(moveRightDown) == null && otherCheckers.get(moveRightDown) == null)
+				{
+					addPossibleMove(checkerToMove, c, moveRightDown);
+				}
+				// if that square is taken by the opposing player's checker see if we can jump
+				// it
+				if (otherCheckers.get(moveRightDown) != null)
+				{
+					checkKingJumpMove(myCheckers, otherCheckers, c, checkerToMove, haveJumped, 0, c);
+				}
+			}
+
+		}
+	}
+
+	private void checkKingJumpMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove,
+			Stack<Coordinates> haveJumped, int jumpsSoFar, Coordinates startingPosition)
+	{
+		int currentYPosition = c.getY();
+		int currentXPosition = c.getX();
+
+		System.out.println("jumps so far " + jumpsSoFar);
+		for (Coordinates coor : haveJumped)
+		{
+			System.out.print(coor.toString() + " - ");
+		}
+
+		System.out.println();
+
+		while (haveJumped.size() > jumpsSoFar)
+		{
+			haveJumped.pop();
+		}
+
+		jumpsSoFar++;
+
+		// can jump over piece to left only if won't fall of left side of board
+		if (currentXPosition > 1)
+		{
+			if (currentYPosition < 6)
+			{
+				Coordinates toOurUpperLeft = board[currentXPosition - 1][currentYPosition + 1];
+
+				// spot on board can only have one checker at a time, so only need to check the
+				// other checkers
+				if (otherCheckers.get(toOurUpperLeft) != null)
+				{
+					Coordinates behindChecker = board[toOurUpperLeft.getX() - 1][toOurUpperLeft.getY() + 1];
+
+					// if no checker behind the one we intend to jump
+					boolean canJump = (myCheckers.get(behindChecker) == null || behindChecker != startingPosition) && otherCheckers.get(behindChecker) == null;
+
+					boolean alreadyJumped = false;
+					for (Coordinates coor : haveJumped)
+					{
+						if (toOurUpperLeft == coor)
+						{
+
+							alreadyJumped = true;
+							break;
+						}
+
+					}
+
+					if (canJump && !alreadyJumped)
+					{
+
+						haveJumped.push(toOurUpperLeft);
+						addPossibleMove(checkerToMove, c, toOurUpperLeft);
+						addPossibleMove(checkerToMove, toOurUpperLeft, behindChecker);
+						checkKingJumpMove(myCheckers, otherCheckers, behindChecker, checkerToMove, haveJumped, jumpsSoFar, startingPosition);
+
+					}
+
+				}
+			}
+
+			if (currentYPosition > 2)
+			{
+				Coordinates toOurLowerLeft = board[currentXPosition - 1][currentYPosition - 1];
+
+				// spot on board can only have one checker at a time, so only need to check the
+				// other checkers
+				if (otherCheckers.get(toOurLowerLeft) != null)
+				{
+					Coordinates behindChecker = board[toOurLowerLeft.getX() - 1][toOurLowerLeft.getY() - 1];
+
+					// if no checker behind the one we intend to jump
+					boolean canJump = (myCheckers.get(behindChecker) == null || behindChecker != startingPosition) && otherCheckers.get(behindChecker) == null;
+
+					boolean alreadyJumped = false;
+					for (Coordinates coor : haveJumped)
+					{
+						if (toOurLowerLeft == coor)
+						{
+							System.out.println("matched");
+							alreadyJumped = true;
+							break;
+						}
+
+					}
+
+					System.out.println("canJump " + canJump + " alreadyJumped " + alreadyJumped);
+					if (canJump && !alreadyJumped)
+					{
+						haveJumped.push(toOurLowerLeft);
+						addPossibleMove(checkerToMove, c, toOurLowerLeft);
+						addPossibleMove(checkerToMove, toOurLowerLeft, behindChecker);
+						checkKingJumpMove(myCheckers, otherCheckers, behindChecker, checkerToMove, haveJumped, jumpsSoFar, startingPosition);
+					}
+
+				}
+
+			}
+		}
+
+		// if we are not on the right edge of the board see what right moves we can make
+		if (currentXPosition < 6)
+
+		{
+			if (currentYPosition < 6)
+			{
+				Coordinates toOurUpperRight = board[currentXPosition + 1][currentYPosition + 1];
+				if (otherCheckers.get(toOurUpperRight) != null)
+				{
+					Coordinates behindChecker = board[toOurUpperRight.getX() + 1][toOurUpperRight.getY() + 1];
+
+					// if no checker behind the one we intend to jump
+					boolean canJump = (myCheckers.get(behindChecker) == null || behindChecker != startingPosition) && otherCheckers.get(behindChecker) == null;
+
+					boolean alreadyJumped = false;
+					for (Coordinates coor : haveJumped)
+					{
+						if (toOurUpperRight == coor)
+						{
+							System.out.println("matched");
+							alreadyJumped = true;
+							break;
+						}
+
+					}
+
+					System.out.println("canJump " + canJump + " alreadyJumped " + alreadyJumped);
+					if (canJump && !alreadyJumped)
+					{
+						haveJumped.push(toOurUpperRight);
+						addPossibleMove(checkerToMove, c, toOurUpperRight);
+						addPossibleMove(checkerToMove, toOurUpperRight, behindChecker);
+						checkKingJumpMove(myCheckers, otherCheckers, behindChecker, checkerToMove, haveJumped, jumpsSoFar, startingPosition);
+					}
+				}
+
+			}
+
+			if (currentYPosition > 1)
+			{
+				Coordinates toOurLowerRight = board[currentXPosition + 1][currentYPosition - 1];
+				if (otherCheckers.get(toOurLowerRight) != null)
+				{
+					Coordinates behindChecker = board[toOurLowerRight.getX() + 1][toOurLowerRight.getY() - 1];
+
+					// if no checker behind the one we intend to jump
+					boolean canJump = (myCheckers.get(behindChecker) == null || behindChecker != startingPosition) && otherCheckers.get(behindChecker) == null;
+
+					boolean alreadyJumped = false;
+					for (Coordinates coor : haveJumped)
+					{
+						if (toOurLowerRight == coor)
+						{
+							alreadyJumped = true;
+							break;
+						}
+
+					}
+
+					if (canJump && !alreadyJumped)
+					{
+						haveJumped.push(toOurLowerRight);
+						addPossibleMove(checkerToMove, c, toOurLowerRight);
+						addPossibleMove(checkerToMove, toOurLowerRight, behindChecker);
+						checkKingJumpMove(myCheckers, otherCheckers, behindChecker, checkerToMove, haveJumped, jumpsSoFar, startingPosition);
+					}
+
+				}
+			}
+		}
+
+	}
+
 	/**
-	 * Add a two vertices to a checker's possible move directed graph
+	 * Add two vertices to a checker's possible move directed graph
 	 * 
 	 * @param checker          Checker who has this move available
 	 * @param startingPosition The position the checker is starting at
@@ -393,97 +620,6 @@ public class CheckerBoard
 		int start = coordinateToInteger(startingPosition);
 		int end = coordinateToInteger(endingPosition);
 		checker.setPossibleMoves(start, end);
-	}
-
-	/**
-	 * Print an adjacency table in the console for the checker
-	 * at those coordinates
-	 * @param c Coordinate the checker is at
-	 */
-	public void printPossibleMoves(Coordinates c) 
-	{	
-		Checker checker;
-		if(whiteCheckers.get(c) != null)
-		{
-			checker = whiteCheckers.get(c);
-		}
-		else if(redCheckers.get(c) != null)
-		{
-			checker = redCheckers.get(c);
-		}
-		else
-		{
-			System.out.println("no checker at that coordinate");
-			return;
-		}
-		
-		Digraph dg = checker.getPossibleMoves();
-
-		// print adj table
-		System.out.println("Adjacency List:");
-		System.out.println("---------------");
-
-		for (int v = 0; v < dg.V(); v++) {
-			if(dg.adj(v) == null)
-			{
-				return;
-			}
-			Iterable<Integer> vertexAdjs = dg.adj(v);
-			System.out.print(v + ": ");
-
-			int adjsNumber = dg.outdegree(v); // help print adjacency list so no -> after last adj vertex
-
-			// print each adjacent vertex to the one we are looking at
-			for (Integer a : vertexAdjs) 
-			{
-				adjsNumber--;
-				System.out.print(a);
-
-				if (adjsNumber != 0) 
-				{
-					System.out.print(" -> ");
-				}
-			}
-
-			System.out.println();
-		}
-	}
-	
-	/**
-	 * Getter for possible moves
-	 * @param c
-	 * @return
-	 */
-	public ArrayList<Integer> getPossibleMoves(Coordinates c)
-	{
-		Checker checker;
-		if(whiteCheckers.get(c) != null)
-		{
-			checker = whiteCheckers.get(c);
-		}
-		else if(redCheckers.get(c) != null)
-		{
-			checker = redCheckers.get(c);
-		}
-		else
-		{
-			System.out.println("no checker at that coordinate");
-			return null;
-		}
-		
-		Digraph dg = checker.getPossibleMoves();
-		ArrayList<Integer> adjacencyList = new ArrayList<Integer>();
-		for (int v = 0; v < dg.V(); v++) 
-		{
-			Iterable<Integer> vertexAdjs = dg.adj(v);
-			int adjsNumber = dg.outdegree(v);
-			for (Integer a : vertexAdjs) 
-			{
-				adjsNumber--;
-				adjacencyList.add(a);
-			}
-		}
-		return adjacencyList;
 	}
 
 	/**
@@ -502,6 +638,7 @@ public class CheckerBoard
 		BinarySearchST<Coordinates, Checker> otherCheckers;
 		BinarySearchST<Coordinates, Checker> myCheckers;
 
+		// determine the color of the checkers we are dealing with
 		if (whiteCheckers.get(start) != null)
 		{
 			checker = whiteCheckers.get(start);
@@ -526,42 +663,54 @@ public class CheckerBoard
 		Digraph availableMoves = checker.getPossibleMoves();
 		int startingPosition = this.coordinateToInteger(start);
 		DepthFirstDirectedPaths dfp = new DepthFirstDirectedPaths(availableMoves, startingPosition);
+		// BreadthFirstDirectedPaths dfp = new BreadthFirstDirectedPaths(availableMoves,
+		// startingPosition);
 
 		int endingPosition = coordinateToInteger(end);
 		Coordinates coordinateImOn = start;
 
 		// if it's not in the realm of possible moves, don't move anywhere
-		if (dfp.hasPathTo(endingPosition))
+		if (!dfp.hasPathTo(endingPosition))
 		{
-			for (int path : dfp.pathTo(endingPosition))
-			{
-				// if the checker we mapped out on our path is the opposing player's checker
-				// that means that we jumped it and it is gone.
-				Coordinates c = integerToCoordinate(path);
 
-				System.out.println(c.toString());
-
-				if (otherCheckers.get(c) != null)
-				{
-					otherCheckers.delete(c);
-
-				}
-				else
-				{
-					myCheckers.put(c, checker);
-//				drawWhiteCheckers();
-//				drawRedCheckers();
-//				StdDraw.pause(1000);
-				}
-				myCheckers.delete(coordinateImOn);
-				coordinateImOn = c;
-			}
-		}
-		else
-		{
 			return false;
+
 		}
+
+		for (int path : dfp.pathTo(endingPosition))
+		{
+			// if the checker we mapped out on our path is the opposing player's checker
+			// that means that we jumped it and it is gone.
+			Coordinates c = integerToCoordinate(path);
+
+			if (otherCheckers.get(c) != null)
+			{
+				otherCheckers.delete(c);
+
+			}
+			else
+			{
+				myCheckers.put(c, checker);
+
+				// if the checker is at the opposite side of the board king them
+				if (checker.getColor() == Draw.RED && c.getY() == 7)
+				{
+					checker.kingMe();
+				}
+				else if (checker.getColor() == Draw.WHITE && c.getY() == 0)
+				{
+					checker.kingMe();
+				}
+
+			}
+
+			myCheckers.delete(coordinateImOn);
+			coordinateImOn = c;
+
+		}
+
 		return true;
+
 	}
 
 	/**
@@ -606,78 +755,246 @@ public class CheckerBoard
 		coor = new Coordinates(x, y);
 
 		return coor;
+
 	}
 
 	/**
-	 * Draws checker board
+	 * Print an adjacency table in the console for the checker at those coordinates
+	 * 
+	 * @param c Coordinate the checker is at
 	 */
-	public void drawCheckerBoard()
+	public void printPossibleMoves(Coordinates c)
 	{
-		int n = 8;
-		StdDraw.setXscale(0, n);
-		StdDraw.setYscale(0, n);
-
-		for (int i = n - 1; i >= 0; i--)
+		Checker checker;
+		if (whiteCheckers.get(c) != null)
 		{
-			for (int j = n - 1; j >= 0; j--)
+			checker = whiteCheckers.get(c);
+		}
+		else if (redCheckers.get(c) != null)
+		{
+			checker = redCheckers.get(c);
+		}
+		else
+		{
+			System.out.println("no checker at that coordinate");
+			return;
+		}
+
+		Digraph dg = checker.getPossibleMoves();
+
+		// print adj table
+		System.out.println("Adjacency List:");
+		System.out.println("---------------");
+
+		for (int v = 0; v < dg.V(); v++)
+		{
+			if (dg.adj(v) == null)
 			{
-				if ((i + j) % 2 != 0)
+				return;
+			}
+			Iterable<Integer> vertexAdjs = dg.adj(v);
+			System.out.print(v + ": ");
+
+			int adjsNumber = dg.outdegree(v); // help print adjacency list so no -> after last adj vertex
+
+			// print each adjacent vertex to the one we are looking at
+			for (Integer a : vertexAdjs)
+			{
+				adjsNumber--;
+				System.out.print(a);
+
+				if (adjsNumber != 0)
 				{
-					StdDraw.setPenColor(StdDraw.BLACK);
+					System.out.print(" -> ");
+				}
+			}
+
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Getter for possible moves
+	 * 
+	 * @param c
+	 * @return
+	 */
+	public ArrayList<Integer> getPossibleMoves(Coordinates c)
+	{
+		Checker checker;
+		if (whiteCheckers.get(c) != null)
+		{
+			checker = whiteCheckers.get(c);
+		}
+		else if (redCheckers.get(c) != null)
+		{
+			checker = redCheckers.get(c);
+		}
+		else
+		{
+			System.out.println("no checker at that coordinate");
+			return null;
+		}
+
+		Digraph dg = checker.getPossibleMoves();
+		ArrayList<Integer> adjacencyList = new ArrayList<Integer>();
+		for (int v = 0; v < dg.V(); v++)
+		{
+			Iterable<Integer> vertexAdjs = dg.adj(v);
+			for (Integer a : vertexAdjs)
+			{
+				adjacencyList.add(a);
+			}
+		}
+		return adjacencyList;
+	}
+
+	/**
+	 * Print the checker board and checkers in the console
+	 */
+	public void printBoard()
+	{
+		System.out.println("\n\nBoard");
+		for (int y = 7; y >= 0; y--)
+		{
+			for (int x = 0; x < 8; x++)
+			{
+				if (x % 8 == 0)
+				{
+					System.out.println();
+				}
+				Coordinates c = board[x][y];
+
+				if (whiteCheckers.get(c) != null)
+				{
+					System.out.print("   w   ");
+				}
+				else if (redCheckers.get(c) != null)
+				{
+					System.out.print("  r   ");
 				}
 				else
 				{
-					StdDraw.setPenColor(StdDraw.RED);
+					System.out.print(board[x][y].toString() + " ");
 				}
-				StdDraw.filledSquare(i + 0.5, j + 0.5, 0.5);
 			}
 		}
-		drawWhiteCheckers();
-		drawRedCheckers();
 	}
 
 	/**
-	 * Draws red checkers on checker board
+	 * set up board for presentation
 	 */
-	public void drawRedCheckers()
+	public void test1Board()
 	{
-		if (redCheckers.isEmpty())
-		{
-			return;
-		}
-		double radius = 0.4;
-		double offSet = 0.5;
-		// draw red checkers
-		StdDraw.setPenColor(StdDraw.RED);
+		redCheckers = new BinarySearchST<>();
 
-		for (Coordinates coor : redCheckers.keys())
-		{
-			int x = coor.getX();
-			int y = coor.getY();
-
-			StdDraw.filledCircle(x + offSet, y + offSet, radius);
-		}
+		// red checkers
+		Coordinates coor = board[3][4];
+		redCheckers.put(coor, new Checker(Draw.RED));
+		coor = board[3][2];
+		redCheckers.put(coor, new Checker(Draw.RED));
+		coor = board[1][0];
+		redCheckers.put(coor, new Checker(Draw.RED));
 	}
 
-	/**
-	 * Draws white checkers on checker board
-	 */
-	public void drawWhiteCheckers()
+	public void testKingBoard()
 	{
-		if (whiteCheckers.isEmpty())
-		{
-			return;
-		}
-		StdDraw.setPenColor(StdDraw.WHITE);
-		double radius = 0.4;
-		double offSet = 0.5;
+		redCheckers = new BinarySearchST<>();
+		whiteCheckers = new BinarySearchST<>();
 
-		for (Coordinates coor : whiteCheckers.keys())
-		{
-			int x = coor.getX();
-			int y = coor.getY();
+		// top
+		Coordinates coor = board[2][7];
+		Checker toPlace = new Checker(Draw.RED);
+		toPlace.kingMe();
+		redCheckers.put(coor, toPlace);
+		// bottom
+		coor = board[1][0];
+		toPlace = new Checker(Draw.RED);
+		toPlace.kingMe();
+		redCheckers.put(coor, toPlace);
 
-			StdDraw.filledCircle(x + offSet, y + offSet, radius);
-		}
+		// right
+		coor = board[7][4];
+		toPlace = new Checker(Draw.RED);
+		toPlace.kingMe();
+		redCheckers.put(coor, toPlace);
+
+		// left
+		coor = board[0][3];
+		toPlace = new Checker(Draw.RED);
+		toPlace.kingMe();
+		redCheckers.put(coor, toPlace);
+
+		// center
+		coor = board[4][3];
+		toPlace = new Checker(Draw.RED);
+		toPlace.kingMe();
+		redCheckers.put(coor, toPlace);
+
+		// white pieces test top
+		coor = board[1][6];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[1][4];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[3][0];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[3][2];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[3][4];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[5][6];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
 	}
+
+	public void testKingLoop()
+	{
+
+		redCheckers = new BinarySearchST<>();
+		whiteCheckers = new BinarySearchST<>();
+
+		// top
+		Coordinates coor = board[2][7];
+		Checker toPlace = new Checker(Draw.RED);
+		toPlace.kingMe();
+		redCheckers.put(coor, toPlace);
+
+		// white pieces test top
+		coor = board[1][6];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[1][4];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[3][6];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+
+		coor = board[3][4];
+		toPlace = new Checker(Draw.WHITE);
+		toPlace.kingMe();
+		whiteCheckers.put(coor, toPlace);
+	}
+
 }
