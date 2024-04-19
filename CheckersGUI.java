@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import edu.princeton.cs.algs4.BinarySearchST;
+import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Draw;
 import edu.princeton.cs.algs4.DrawListener;
 import edu.princeton.cs.algs4.StdOut;
@@ -129,21 +130,26 @@ public class CheckersGUI implements DrawListener
 		//if mouse click is within the checker board area
 		if (x < 8 && y < 8)
 		{
+			//identify checker from mouse click
+			CheckerBoard board = game.getBoard();
 			game.pickPlacesToMove(new Coordinates((int) x, (int) y));
+			
+			
 			// color selected checker yellow
 			drawnBoard.setPenColor(Draw.YELLOW);
 			double radius = 0.4;
 			double offSet = 0.5;
 			drawnBoard.filledCircle(coord.getX() + offSet, coord.getY() + offSet, radius);
-
+		
 			// color possible moves with yellow outline
-			CheckerBoard board = game.getBoard();
-			board.getAllPossibleMoves(coord);
+			board.buildPossibleMoveGraph(coord);
 			ArrayList<Integer> possibleMoves = board.getPossibleMoves(coord);
+			System.out.println("size: " + possibleMoves.size());
 			for (int i = 0; i < possibleMoves.size(); i++)
 			{
 				Coordinates coord2 = board.integerToCoordinate(possibleMoves.get(i));
 				drawnBoard.circle(coord2.getX() + offSet, coord2.getY() + offSet, radius);
+				System.out.print(possibleMoves.get(i));
 			}
 		}
 
@@ -176,17 +182,18 @@ public class CheckersGUI implements DrawListener
 		}
 	}
 
-	public void drawPossibleMoves()
+	public void drawPossibleMoves(Coordinates coord)
 	{
 		Checker checkerWithMoves;
+		
 	}
 	
-	public void drawKingedCheckers(Coordinates c)
+	public void drawKingedCheckers(Coordinates coord)
 	{
 		double radius = 0.4;
 		double offSet = 0.5;
-		int x = c.getX();
-		int y = c.getY();
+		int x = coord.getX();
+		int y = coord.getY();
 		
 		drawnBoard.filledCircle(x + offSet, y + offSet, radius);
 		drawnBoard.text(x, y, "K");
