@@ -209,7 +209,6 @@ public class CheckersGUI implements DrawListener
 		}
 
 		// if game ends, ask if player wants to start new game
-		// I don't know why this is triggered when game.pickPlacesToMove is activated
 		if (game.getGameOverStatus() == true)	
 		{
 			Font smallFont = drawnBoard.getFont();
