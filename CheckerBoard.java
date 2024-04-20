@@ -1,18 +1,11 @@
 package gp;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
-import javax.swing.JFrame;
-
-import edu.princeton.cs.algs4.BinarySearchST;
+import edu.princeton.cs.algs4.RedBlackBST;
 import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
 import edu.princeton.cs.algs4.DepthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Draw;
-import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdDraw;
 
 /**
  * Defines checkers as having coordinates, being a color, having possible moves,
@@ -24,8 +17,8 @@ import edu.princeton.cs.algs4.StdDraw;
 public class CheckerBoard
 {
 	private Coordinates[][] board;
-	private BinarySearchST<Coordinates, Checker> whiteCheckers;
-	private BinarySearchST<Coordinates, Checker> redCheckers;
+	private RedBlackBST<Coordinates, Checker> whiteCheckers;
+	private RedBlackBST<Coordinates, Checker> redCheckers;
 	private int rows = 8;
 	private int columns = 8;
 
@@ -34,8 +27,8 @@ public class CheckerBoard
 	 */
 	public CheckerBoard()
 	{
-		whiteCheckers = new BinarySearchST<>();
-		redCheckers = new BinarySearchST<>();
+		whiteCheckers = new RedBlackBST<>();
+		redCheckers = new RedBlackBST<>();
 		board = new Coordinates[rows][columns];
 
 		for (int y = rows - 1; y >= 0; y--)
@@ -56,7 +49,7 @@ public class CheckerBoard
 	 * 
 	 * @return whiteCheckers
 	 */
-	public BinarySearchST<Coordinates, Checker> getWhiteCheckers()
+	public RedBlackBST<Coordinates, Checker> getWhiteCheckers()
 	{
 		return whiteCheckers;
 	}
@@ -67,7 +60,7 @@ public class CheckerBoard
 	 * 
 	 * @return redCheckers
 	 */
-	public BinarySearchST<Coordinates, Checker> getRedCheckers()
+	public RedBlackBST<Coordinates, Checker> getRedCheckers()
 	{
 		return redCheckers;
 	}
@@ -145,7 +138,7 @@ public class CheckerBoard
 	{
 		Coordinates c = board[x][y];
 
-		BinarySearchST<Coordinates, Checker> checkers;
+		RedBlackBST<Coordinates, Checker> checkers;
 
 		if (whiteCheckers.get(c) != null)
 		{
@@ -157,7 +150,6 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("no checker to delete");
 			return;
 		}
 		checkers.delete(c);
@@ -172,8 +164,8 @@ public class CheckerBoard
 	 */
 	public void buildPossibleMoveGraph(Coordinates c)
 	{
-		BinarySearchST<Coordinates, Checker> myCheckers;
-		BinarySearchST<Coordinates, Checker> otherCheckers;
+		RedBlackBST<Coordinates, Checker> myCheckers;
+		RedBlackBST<Coordinates, Checker> otherCheckers;
 
 		if (whiteCheckers.get(c) != null)
 		{
@@ -187,7 +179,6 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("No checkers at those coordinates");
 			return;
 		}
 
@@ -248,7 +239,7 @@ public class CheckerBoard
 	}
 
 	/**
-	 * Given a coordinate and two BinarySearchST of different colored checkers (one
+	 * Given a coordinate and two RedBlackBST of different colored checkers (one
 	 * white and one red) determine where a checker (not kinged) can move on the
 	 * board. The possible moves will be updated in that checker's graph
 	 * 
@@ -256,7 +247,7 @@ public class CheckerBoard
 	 * @param otherCheckers
 	 * @param c
 	 */
-	private void regularCheckerMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c)
+	private void regularCheckerMove(RedBlackBST<Coordinates, Checker> myCheckers, RedBlackBST<Coordinates, Checker> otherCheckers, Coordinates c)
 	{
 		Checker checkerToMove = myCheckers.get(c);
 		// if I don't have a checker at that coordinate, return
@@ -333,7 +324,7 @@ public class CheckerBoard
 	 *                      starting from
 	 * @param checkerToMove The checker who we want the possible moves for
 	 */
-	private void checkJumpMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove)
+	private void checkJumpMove(RedBlackBST<Coordinates, Checker> myCheckers, RedBlackBST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove)
 	{
 		int direction;
 
@@ -397,14 +388,14 @@ public class CheckerBoard
 
 	/**
 	 * Identify what moves a kinged checker can make.  Add these places to the checker's directed graph of possible moves
-	 * @param myCheckers The BinarySearchST of the checker that are actively being moved. ie. current player's checkers
+	 * @param myCheckers The RedBlackBST of the checker that are actively being moved. ie. current player's checkers
 	 * @param otherCheckers Checkers of the opposing player who our current checker piece may be able to jump
 	 * @param c Coordinates of the checker piece we want to move
 	 */
-	private void kingedCheckerMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c)
+	private void kingedCheckerMove(RedBlackBST<Coordinates, Checker> myCheckers, RedBlackBST<Coordinates, Checker> otherCheckers, Coordinates c)
 	{
 		Checker checkerToMove = myCheckers.get(c);
-		BinarySearchST<Coordinates, Integer> toBeChecked = new BinarySearchST<>(); //list of places we've been to, used for checking jumps
+		RedBlackBST<Coordinates, Integer> toBeChecked = new RedBlackBST<>(); //list of places we've been to, used for checking jumps
 		toBeChecked.put(c, 1);
 
 		if (!checkerToMove.getIsKing())
@@ -492,14 +483,14 @@ public class CheckerBoard
 
 	/**
 	 * Check where a kinged checker can jump.  If a jump is possible add it to the checker we are moving's graph of possible moves
-	 * @param myCheckers BinarySearchST of checker that we are checking the possible moves for
-	 * @param otherCheckers BinarySearchST of oppossing checkers
+	 * @param myCheckers RedBlackBST of checker that we are checking the possible moves for
+	 * @param otherCheckers RedBlackBST of opposing checkers
 	 * @param c Coordinate of were we are looking for possible moves
 	 * @param checkerToMove Checker we are looking for possible moves for
 	 * @param toBeChecked Places we have already checked to see if they can be jumped
 	 */
-	private void checkKingJumpMove(BinarySearchST<Coordinates, Checker> myCheckers, BinarySearchST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove,
-			BinarySearchST<Coordinates, Integer> toBeChecked)
+	private void checkKingJumpMove(RedBlackBST<Coordinates, Checker> myCheckers, RedBlackBST<Coordinates, Checker> otherCheckers, Coordinates c, Checker checkerToMove,
+			RedBlackBST<Coordinates, Integer> toBeChecked)
 	{
 		int currentYPosition = c.getY();
 		int currentXPosition = c.getX();
@@ -645,8 +636,8 @@ public class CheckerBoard
 	public boolean move(Coordinates start, Coordinates end)
 	{
 		Checker checker;
-		BinarySearchST<Coordinates, Checker> otherCheckers;
-		BinarySearchST<Coordinates, Checker> myCheckers;
+		RedBlackBST<Coordinates, Checker> otherCheckers;
+		RedBlackBST<Coordinates, Checker> myCheckers;
 
 		// determine the color of the checkers we are dealing with
 		if (whiteCheckers.get(start) != null)
@@ -677,14 +668,12 @@ public class CheckerBoard
 			return false;
 		}
 		int startingPosition = this.coordinateToInteger(start);
-	// 	DepthFirstDirectedPaths dfp = new DepthFirstDirectedPaths(availableMoves, startingPosition);
 		BreadthFirstDirectedPaths bfp = new BreadthFirstDirectedPaths(availableMoves, startingPosition);
 		
 
 		int endingPosition = coordinateToInteger(end);
 		Coordinates coordinateImOn = start;
 
-		this.printPossibleMoves(start);
 		// if it's not in the realm of possible moves, don't move anywhere.
 		// they cannot land on their opponents pieces, just jump over them
 		if (!bfp.hasPathTo(endingPosition) || otherCheckers.contains(end) || myCheckers.contains(end))
@@ -699,7 +688,6 @@ public class CheckerBoard
 			// if the checker we mapped out on our path is the opposing player's checker
 			// that means that we jumped it and it is gone.  Need to prevent other queued moves from visiting it again
 			Coordinates c = integerToCoordinate(path);
-			System.out.println(path);
 
 			if (otherCheckers.get(c) != null)
 			{
@@ -725,11 +713,9 @@ public class CheckerBoard
 
 			if (path == endingPosition && endingPosition == startingPosition)
 			{
-				System.out.println("what is ending path: " + path);
 				continue;
 			}
 
-			System.out.println("Deleting " + this.coordinateToInteger(coordinateImOn));
 			myCheckers.delete(coordinateImOn);
 			coordinateImOn = c;
 			
@@ -837,7 +823,6 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("no checker at that coordinate");
 			return;
 		}
 
@@ -893,7 +878,6 @@ public class CheckerBoard
 		}
 		else
 		{
-			System.out.println("no checker at that coordinate");
 			return null;
 		}
 

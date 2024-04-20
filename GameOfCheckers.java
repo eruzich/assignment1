@@ -1,7 +1,6 @@
 package gp;
 
 import java.awt.Color;
-
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Draw;
 import edu.princeton.cs.algs4.Queue;
@@ -85,6 +84,11 @@ public class GameOfCheckers
 			gameOver = true;
 			
 		}
+		else
+		{
+			gameOver = false;
+		}
+		
 	}
 	
 	/**
@@ -189,14 +193,12 @@ public class GameOfCheckers
 			end = movesToTake.dequeue();
 			board.move(start, end);
 			start = end;
-			board.printBoard();
 
 		}
 
 		movingChecker.resetPossibleMoves(); // may need to update to make sure drawing right thing
 		updateWhoseTurn();
 		checkIfGameOver();
-		board.printBoard();
  		gui.drawPlayArea();
 
 	}
@@ -244,8 +246,6 @@ public class GameOfCheckers
 	{
 
 		Checker checkerToMove;
-
-		System.out.println("Coor clicked: " + coor.toString());
 
 		// if this is the first list we are picking then make sure we are picking our
 		// own checker

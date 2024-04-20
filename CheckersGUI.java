@@ -1,20 +1,18 @@
 package gp;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import javax.swing.JFrame;
-import edu.princeton.cs.algs4.BinarySearchST;
 import edu.princeton.cs.algs4.Draw;
 import edu.princeton.cs.algs4.DrawListener;
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.RedBlackBST;
 
 public class CheckersGUI implements DrawListener
 
 {
 	private Draw drawnBoard;
-	private BinarySearchST<Coordinates, Checker> whiteCheckers;
-	private BinarySearchST<Coordinates, Checker> redCheckers;
+	private RedBlackBST<Coordinates, Checker> whiteCheckers;
+	private RedBlackBST<Coordinates, Checker> redCheckers;
 	private CheckerBoard board;
 	private GameOfCheckers game;
 
@@ -78,7 +76,6 @@ public class CheckersGUI implements DrawListener
 	 */
 	public void drawWhoseTurn()
 	{
-		System.out.println("Whose turn" + game.getWhoseTurn().toString());
 		if (game.getWhoseTurn() == Draw.RED)
 		{
 
@@ -195,7 +192,6 @@ public class CheckersGUI implements DrawListener
 	public void mouseClicked(double x, double y)
 	{
 		Coordinates coord = new Coordinates((int) x, (int) y);
-		// System.out.println(x + ", " + y);
 
 		// if mouse click is within the checker board area
 		if (x < 8 && y < 8)
@@ -208,7 +204,6 @@ public class CheckersGUI implements DrawListener
 		// if mouse click is within the submit button area
 		if (x >= 8.5 && x <= 9.5 && y >= 3.5 && y <= 4.5)
 		{
-			System.out.println("Clicking submit button");
 			game.submitMove();
 			game.checkIfGameOver();
 		}
@@ -244,7 +239,6 @@ public class CheckersGUI implements DrawListener
 			{
 				board = null;
 				board = new CheckerBoard();
-
 				game.setBoard(board);
 				game.setWinner(null);
 				game.setWhoseTurn(Draw.RED);
@@ -254,7 +248,7 @@ public class CheckersGUI implements DrawListener
 				game.checkIfGameOver();
 				drawnBoard.clear();
 				drawPlayArea();
-				board.printBoard();
+			
 
 			}
 		}
