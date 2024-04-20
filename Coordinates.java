@@ -22,19 +22,35 @@ public class Coordinates implements Comparable<Coordinates> {
 	    this.y = y;
 	}
 
+	/**
+	 * Returns the x-axis of coordinate
+	 * @return
+	 */
 	public int getX() {
 		return x;
 	}
 
+	/**
+	 * Sets the x-axis of coordinate
+	 * @param x Value of new x-axis
+	 */
 	public void setX(int x)
 	{
 		this.x = x;
 	}
 
+	/**
+	 * Returns the y-axis of coordinate
+	 * @return
+	 */
 	public int getY() {
 	    return y;
 	}
 
+	/**
+	 * Sets the y-axis of coordinate
+	 * @param y Value of new y-axis
+	 */
 	public void setY(int y)
 	{
 		this.y = y;

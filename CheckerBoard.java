@@ -505,11 +505,11 @@ public class CheckerBoard
 		int currentXPosition = c.getX();
 
 		// move to left
-		if (currentXPosition != 0)
+		if (currentXPosition > 1)
 		{
 
 			// move left up
-			if (currentYPosition != 7)
+			if (currentYPosition < 6)
 			{
 				Coordinates toOurUpperLeft = board[currentXPosition - 1][currentYPosition + 1];
 
@@ -535,7 +535,7 @@ public class CheckerBoard
 			}
 
 			// move left down
-			if (currentYPosition != 0)
+			if (currentYPosition > 1)
 			{
 				Coordinates toOurLowerLeft = board[currentXPosition - 1][currentYPosition - 1];
 				// there is a checker there
@@ -561,9 +561,9 @@ public class CheckerBoard
 		}
 
 		//to the right
-		if (currentXPosition != 7)
+		if (currentXPosition < 6)
 		{
-			if (currentYPosition != 7)
+			if (currentYPosition < 6)
 			{
 				Coordinates toOurUpperRight = board[currentXPosition + 1][currentYPosition + 1];
 				// there is a checker there
@@ -587,7 +587,7 @@ public class CheckerBoard
 
 			}
 
-			if (currentYPosition != 0)
+			if (currentYPosition > 1)
 			{
 
 				Coordinates toOurLowerRight = board[currentXPosition + 1][currentYPosition - 1];

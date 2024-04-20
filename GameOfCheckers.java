@@ -1,6 +1,8 @@
 package gp;
 
+import java.awt.Color;
 
+import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Draw;
 import edu.princeton.cs.algs4.Queue;
 
@@ -17,13 +19,11 @@ public class GameOfCheckers
 
 	int mouseX = 0;
 	int mouseY = 0;
-	private Player winner;
-	private static boolean isPlaying = true;
+	private Color winner;
+	private boolean gameOver = false;
 	private CheckerBoard board;
-	private Player redPlayer;
-	private Player whitePlayer;
 	Queue<Coordinates> movesToTake;
-	private Player whoseTurn;
+	private Color whoseTurn;
 	CheckersGUI gui;
 
 	/**
@@ -33,12 +33,20 @@ public class GameOfCheckers
 	{
 		winner = null;
 		board = new CheckerBoard();
-		redPlayer = new Player(board.getRedCheckers());
-		whitePlayer = new Player(board.getWhiteCheckers());
-		isPlaying = true;
+		gameOver = false;
 		movesToTake = new Queue<>();
-		whoseTurn = redPlayer;
+		whoseTurn = Draw.RED;
 		gui = new CheckersGUI(board, this);
+	}
+	
+	
+	/**
+	 * Sets the game's board to the one specified 
+	 * @param board Board to have the game use
+	 */
+	public void setBoard(CheckerBoard board)
+	{
+		this.board = board;
 	}
 
 	/**
@@ -51,59 +59,105 @@ public class GameOfCheckers
 		return board;
 	}
 
-	public boolean checkIfGameOver()
+	/**
+	 * Returns which color's turn it is
+	 * @return Returns color who's turn it is
+	 */
+	public Color getWhoseTurn()
 	{
-		if (board.getRedCheckers().size() == 0 || board.getRedCheckers().size() == 0)
-		{
-			isPlaying = false;
-			return true;
-		}
-		return true;
+		return whoseTurn;
 	}
-
-	private void announceTurn(Player player)
+	
+	/**
+	 * Checks to see if a player has lost all of their checkers, if they have the game is over
+	 * @return Returns true if the game is over
+	 */
+	public void checkIfGameOver()
 	{
-		String message;
-
-		if (player.equals(redPlayer))
+		if (board.getRedCheckers().size() == 0 )
 		{
-			StdDraw.setPenColor(Draw.CYAN);
-			StdDraw.filledRectangle(9, 1, .7, .5);
-			StdDraw.filledRectangle(9, 1, .7, .5);
-			StdDraw.setPenColor(Draw.BLACK);
-			StdDraw.text(9, 1, "Red's Turn");
+			winner = Draw.WHITE;
+			gameOver = true;
 		}
-		else
+		else if(board.getWhiteCheckers().size() == 0)
 		{
-			StdDraw.setPenColor(Draw.CYAN);
-			StdDraw.filledRectangle(9, 1, .7, .5);
-			StdDraw.filledRectangle(9, 1, .7, .5);
-			StdDraw.setPenColor(Draw.BLACK);
-			StdDraw.text(9, 1, "White's Turn");
+			winner = Draw.RED;
+			gameOver = true;
+			
 		}
 	}
-
-	public void playGame()
+	
+	/**
+	 * Returns if the game is over or not
+	 * @return Returns if game over
+	 */
+	public boolean getGameOverStatus()
 	{
-		gui.drawPlayArea();
-		isPlaying = true;
-
-		// drawPlayArea(redPlayer);
-
-		while (isPlaying == true)
-		{
-			// see if we need to take turns some how
-
-			// check if game over
-			checkIfGameOver();
-
-		}
+		return gameOver;
 	}
 
 	/**
-	 * Allows the player to click on multiple spaces to make a move. When they do the
-	 * submitMove method the spaces are submitted and their piece moves. This method
-	 * does not validate whether the moves in the movesToTake queue are valid
+	 * Sets the winning color
+	 * @param color Color that won
+	 */
+	public void setWinner(Color color)
+	{
+		winner = color;
+	}
+	
+	/**
+	 * Returns the color that won
+	 * @return Returns winning color
+	 */
+	public Color getWinner()
+	{
+		return winner;
+	}
+	
+	/**
+	 * Returns a message saying who's turn it is based on the color place in the parameter
+	 * @param color Color who's turn it will be
+	 * @return Returns message saying which color's turn it is
+	 */
+	public String announceTurn(Color color)
+	{
+		String message;
+
+		if (color == Draw.RED)
+		{
+			
+			message = "Red's Turn";
+		}
+		else
+		{
+			message = "White's Turn";
+		}
+		
+		return message;
+	}
+
+	/**
+	 * Plays a game of checkers until the game is over
+	 */
+	public void playGame()
+	{
+		gui.drawPlayArea();
+	
+	//		while(isPlaying == true)
+		{
+			// check if game over
+			checkIfGameOver();
+		
+			
+		}
+		
+
+	}
+
+	/**
+	 * Submits the queue of spaces a player has clicked on and goes through them one by one and moves the 
+	 * checker to those spaces.
+	 * If there are not at least 2 spaces queued up no move of the checker is attempted.
 	 */
 	public void submitMove()
 	{
@@ -119,6 +173,7 @@ public class GameOfCheckers
 
 		start = movesToTake.dequeue();
 
+		//set the checker we are moving by seeing what color it is
 		if (board.getRedCheckers().get(start) != null)
 		{
 			movingChecker = board.getRedCheckers().get(start);
@@ -128,11 +183,13 @@ public class GameOfCheckers
 			movingChecker = board.getWhiteCheckers().get(start);
 		}
 
+		
 		while (!movesToTake.isEmpty())
 		{
 			end = movesToTake.dequeue();
 			board.move(start, end);
 			start = end;
+			board.printBoard();
 
 		}
 
@@ -140,69 +197,164 @@ public class GameOfCheckers
 		updateWhoseTurn();
 		checkIfGameOver();
 		board.printBoard();
-		gui.drawCheckerBoard();
+ 		gui.drawPlayArea();
+
 	}
 
+	/**
+	 * Resets the queue of moves we are going to take so that it is empty
+	 */
 	public void resetMovesToTake()
 	{
 		movesToTake = new Queue<>();
+		gui.drawCheckerBoard();
 	}
 
+	/**
+	 * Updates whoseTurn so that the opposite color of the one who is currently taking a turn is set
+	 */
 	public void updateWhoseTurn()
 	{
-		if (whoseTurn.equals(redPlayer))
+		if (whoseTurn == Draw.RED)
 		{
-			whoseTurn = whitePlayer;
+			setWhoseTurn(Draw.WHITE);
 		}
 		else
 		{
-			whoseTurn = redPlayer;
+			setWhoseTurn(Draw.RED);
 		}
 	}
+	
+	/**
+	 * Sets whose turn to specific color
+	 * @param color Color whose turn it will be
+	 */
+	public void setWhoseTurn(Color color)
+	{
+		whoseTurn = color;
+	}
 
+	/**
+	 * Allows a player to queue up places on the board they want to move a checker piece
+	 * The player must first select one of their checkers.  Subsequent choices must be 
+	 * spots on the board that that checker is able to move to.
+	 * @param coor
+	 */
 	public void pickPlacesToMove(Coordinates coor)
 	{
+
 		Checker checkerToMove;
+
+		System.out.println("Coor clicked: " + coor.toString());
 
 		// if this is the first list we are picking then make sure we are picking our
 		// own checker
 		if (movesToTake.isEmpty())
 		{
-			if (board.getRedCheckers().get(coor) != null)
+			checkerToMove = getCheckerAtCoordinate(coor);
+
+			//if we didn't select one of our checkers
+			if (checkerToMove == null)
 			{
-				checkerToMove = board.getRedCheckers().get(coor);
+				resetMovesToTake();
+				return;
 			}
-			else if (board.getWhiteCheckers().get(coor) != null)
+			//if we clicked on an opposing player's checkers
+			if (checkerToMove.getColor() != whoseTurn)
 			{
-				checkerToMove = board.getWhiteCheckers().get(coor);
-			}
-			else
-			{
+				resetMovesToTake();
 				return;
 			}
 
-			if (checkerToMove.getColor() != whoseTurn.getColor())
-			{
-				return;
-			}
 			movesToTake.enqueue(coor);
-			board.getAllPossibleMoves(coor);
+			board.buildPossibleMoveGraph(coor);
+			gui.drawPossibleMoves(coor);
 			return;
 		}
 
 		// make sure the coordinates are in our possible moves
-
-		movesToTake.enqueue(coor);
-
-		for (Coordinates c : movesToTake)
+		if (movesToTake.size() > 0)
 		{
-			System.out.println(c.toString());
+			checkerToMove = getCheckerAtCoordinate(movesToTake.peek());
+			if (checkerToMove == null)
+			{
+				resetMovesToTake();
+				return;
+			}
+			//if we click to move to on spot where ther is an opposing player's checker
+			if(whoseTurn == Draw.RED)
+			{
+				if(board.getWhiteCheckers().get(coor) != null)
+				{
+					resetMovesToTake();
+					return;
+				}
+			}
+			else
+			{
+				if(board.getRedCheckers().get(coor) != null)
+				{
+					resetMovesToTake();
+					return;
+				}
+				
+			}
+
+			boolean wasInGraph = false;
+			Digraph dg = checkerToMove.getPossibleMoves();
+
+			for (int v = 0; v < dg.V(); v++)
+			{
+				for (Integer c : dg.adj(v))
+				{
+					if (board.coordinateToInteger(coor) == c)
+					{
+						movesToTake.enqueue(coor);
+						wasInGraph = true;
+					}
+				}
+			}
+			
+			if(!wasInGraph)
+			{
+				resetMovesToTake();
+			}
+
 		}
+
 	}
 
-	public static void main(String[] args)
+	/**
+	 * Returns the checker at a given coordinate if it exists
+	 * @param coor Coordinate we think there is a checker at
+	 * @return Returns a checker at given coordinate
+	 */
+	public Checker getCheckerAtCoordinate(Coordinates coor)
 	{
-		GameOfCheckers game = new GameOfCheckers();
-		game.playGame();
+		Checker checker;
+		
+		if (board.getRedCheckers().get(coor) != null)
+		{
+			checker = board.getRedCheckers().get(coor);
+		}
+		else if (board.getWhiteCheckers().get(coor) != null)
+		{
+			checker = board.getWhiteCheckers().get(coor);
+		}
+		else
+		{
+			return null;
+		}
+		return checker;
 	}
+
+	
+	//play our game of checkers
+		public static void main(String[] args)
+		{
+			GameOfCheckers game = new GameOfCheckers();
+			game.playGame();
+			
+		}
+	
 }
