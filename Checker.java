@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Draw;
 
 /*
- * Used to create a Checker object
+ * Used to create a Checker piece
  * 
  * @author Erin Mortensen and Elizabeth Ruzich
  */
@@ -89,6 +89,14 @@ public class Checker
 		possibleMoves.addEdge(start, end);
 	}
 
+	/**
+	 * Replaces a checker's directed graph of possible moves with another graph
+	 * @param dg Directed graph that possibleMoves will be set to
+	 */
+	public void setPossibleMoves(Digraph dg)
+	{
+		possibleMoves = dg;
+	}
 	/**
 	 * Resets the checker's directed graph so it is empty
 	 */
